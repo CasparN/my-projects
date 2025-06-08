@@ -1,4 +1,3 @@
-
 # Caspar Niekus - Project Portfolio
 
 Hi, I'm Caspar, a curious and hands-on Embedded Computer Engineering student specializing in bridging the gap between hardware and software. I thrive on solving complex problems and building tangible products from concept to reality. This portfolio showcases some of my favorite projects.
@@ -7,12 +6,15 @@ Hi, I'm Caspar, a curious and hands-on Embedded Computer Engineering student spe
 
 *A low-power, wall-mounted weather display featuring a custom, intuitive UI designed for at-a-glance information.*
 
-![StratusDash Device](assets/stratusdash_photo.png)
-![StratusDash UI](assets/stratusdash_ui.png)
+![StratusDash Device](assets/stratusdash_photo.jpg)
+
+*An image of a prototype of the StratusDash device, showcasing its sleek design and user-friendly interface.*
 
 ### 1.1. The Story & The Challenge
 
 I grew up with a weather station at home, but it was always a point of frustration. It burned through batteries, looked dated, and the outside unit barely worked. When a school project allowed me to build one in an individual project, I jumped at the chance to create something better. The core challenge was twofold: build a full-stack system from the ground up, and make the device so power-efficient it could run for months, feeling more like a piece of art than a gadget that needed constant attention.
+
+Current prototype calculations show an 18-month battery life, admittedly overengineered due to an oversized battery selection, while the target design aims for 6 months between charges. This demonstrates the effectiveness of the power optimization strategies even with conservative hardware choices.
 
 This project is ongoing, with the final integration of the backend and firmware being the next major milestone. StratusDash has already been validated with seven preorders from interested users, with a target delivery of the first units near Christmas.
 
@@ -46,7 +48,7 @@ The project demonstrates a full-stack skill set:
 
 *A proof-of-concept for an autonomous warehouse surveillance robot, designed to navigate and map its environment as a foundational step towards full autonomy.*
 
-![alt text](aura_hero_shot.png)
+![alt text](assets/aura_hero_shot.png)
 
 *A hero shot of the AURA robot, taken on location in a professional warehouse to showcase the project's commercial application and product vision.*
 
