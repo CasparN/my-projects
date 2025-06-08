@@ -48,16 +48,13 @@ The project demonstrates a full-stack skill set:
 
 *A proof-of-concept for an autonomous warehouse surveillance robot, designed to navigate and map its environment as a foundational step towards full autonomy.*
 
-![alt text](assets/aura_hero_shot.png)
+[![alt text](assets/aura_hero_shot.png)](https://www.youtube-nocookie.com/embed/T0WJigca8sU?si=kgRUZoF5qTz-dyqW)
 
 *A hero shot of the AURA robot, taken on location in a professional warehouse to showcase the project's commercial application and product vision.*
 
 ### 2.1. The Story & The Challenge
 
-The high-level vision for AURA was to create an autonomous robot for warehouse surveillance, capable of monitoring climate, detecting air quality changes with a TVOC sensor, and patrolling the premises. To communicate this vision, I storyboarded, scripted, and produced a promotional video, securing a professional warehouse as a filming location.
-
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/T0WJigca8sU?si=kgRUZoF5qTz-dyqW" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-<br/>
+The high-level vision for AURA was to create an autonomous robot for warehouse surveillance, capable of monitoring climate, detecting air quality changes with a TVOC sensor, and patrolling the premises. To communicate this vision, I storyboarded, scripted, and produced a promotional video, securing a professional warehouse as a filming location. To watch it, click the image above [or click here](https://www.youtube-nocookie.com/embed/T0WJigca8sU?si=kgRUZoF5qTz-dyqW).
 
 However, before any of that could happen, the robot had to solve the most fundamental problem of autonomy: **how can a machine navigate a world it has never seen?** Our hardware, a Kobuki Rover, had drivers that were incompatible with standard ROS packages. This meant I had to tackle the challenge head-on by building a SLAM (Simultaneous Localization and Mapping) algorithm from first principles in C++, creating a functional GraphSLAM system that could process live LiDAR data on a resource-constrained Raspberry Pi.
 
