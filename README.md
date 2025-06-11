@@ -4,7 +4,7 @@ Hi, I'm Caspar, a curious and hands-on Embedded Computer Engineering student spe
 
 ## **1. StratusDash E-Paper Weather Station**
 
-*A low-power, wall-mounted weather display featuring a custom, intuitive UI designed for at-a-glance information.*
+*A low-power, standalone wall-mounted weather display featuring a custom, intuitive UI designed for at-a-glance information.*
 
 ![StratusDash Device](assets/stratusdash_photo.jpg)
 
