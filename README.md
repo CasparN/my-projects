@@ -6,7 +6,7 @@ Hi, I'm Caspar, a curious and hands-on Embedded Computer Engineering student spe
 
 *A low-power, wall-mounted weather display featuring a custom, intuitive UI designed for at-a-glance information.*
 
-![StratusDash Device](assets/stratusdash_photo.jpg)
+![StratusDash Device](assets/stratusdash.jpg)
 
 *An image of a prototype of the StratusDash device, showcasing its sleek design and user-friendly interface.*
 
