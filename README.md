@@ -48,7 +48,7 @@ The project demonstrates a full-stack skill set:
 
 *A proof-of-concept for an autonomous warehouse surveillance robot, designed to navigate and map its environment as a foundational step towards full autonomy.*
 
-[![alt text](assets/aura_hero_shot.png)](https://www.youtube-nocookie.com/embed/T0WJigca8sU?si=kgRUZoF5qTz-dyqW)
+[![hero shot of the aura robot](assets/aura_hero_shot.png)](https://youtu.be/T0WJigca8sU)
 
 *A hero shot of the AURA robot, taken on location in a professional warehouse to showcase the project's commercial application and product vision.*
 

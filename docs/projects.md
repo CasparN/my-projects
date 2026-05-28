@@ -1,0 +1,44 @@
+# Projecten
+
+Hier is een selectie van mijn beste werk.
+
+## StratusDash - 04-2025 t/m heden
+
+Slim, batterijgevoed weerstation met 7,5-inch e-paper dat binnenklimaat en externe weersverwachtingen toont. Het project waar ik het meest van heb geleerd van deze hele lijst.
+
+- **Rol:** Product Engineer (full-stack, hardware en fabricage).
+- **Probleem:** Een gebruiksvriendelijk, low-power dashboard moest maandenlang op batterijen draaien en toch echt inzetbaar blijven voor gebruikers.
+- **Resultaat:** Zeven units als pilot-batch gebouwd en geleverd, met modulaire firmware, veilige pairing, OTA-updates, een solide backend en een Nederlandse en Engelse website.
+- **Techstack:** `Arduino` `ESP32` `FastAPI` `MariaDB` `E-Paper`.
+- [Uitgebreide versie](projects/stratusdash/stratusdash.md)
+- [Pairing Architectuur](projects/stratusdash/stratusdash-pairing.md)
+
+## Coulomb Counter - Stage Alflex Technologies - 09-2025 t/m 02-2026
+
+Ontwikkeling van een autonoom en betrouwbaar stroommeetsysteem voor het langdurig analyseren van ultra-low-power IoT-apparaten.
+
+- **Rol:** Solo Embedded Software Engineer (Semester 5 Stage).
+- **Probleem:** Industriële energiemeters (zoals de Joulescope) vereisen een constante pc-verbinding en vertonen software-instabiliteit bij tests langer dan 12 uur. Alflex had behoefte aan een autonoom, embedded alternatief om verborgen stroomvretende-bugs in het veld te vinden.
+- **Resultaat:** Een stabiele firmware-architectuur op basis van een non-blocking superloop. Data wordt via een zelfontworpen binair MQTT-protocol lossless naar een dockerized backend (InfluxDB + MariaDB) gepusht. In offline mode buffert het apparaat tot minimaal twee maanden aan data op een ruwe flash-partitie met oog op wear-leveling. In online mode wordt PSRAM gebruikt om deze data te bufferen.
+- **Techstack:** `C (ESP-IDF)` `ATtiny1616` `ESP32-S3` `MQTT (Mosquitto)` `Python` `InfluxDB` `MariaDB` `Grafana`.
+- [Uitgebreide versie](projects/coulombcounter/alflex-coulomb-counter.md)
+
+## Defensie: Versterken en Verstoren - Dark Tech Studio - 03-2026 t/m 06-2026
+
+Een event-driven akoestische sensor voor het detecteren en classificeren van militaire dreigingen (zoals schoten en voertuigen) via YAMNet.
+
+- **Rol:** Security & Infrastructure Architect / Firmware optimalisatie.
+- **Probleem:** Het team had een werkend prototype voor geluidsclassificatie, maar de architectuur was onveilig voor tactisch gebruik (gevoelig voor Man-in-the-Middle aanvallen en elektronische oorlogsvoering) en lokaal geïsoleerd.
+- **Resultaat:** De firmware-architectuur modulair en event-driven gemaakt (zendt alleen bij overschrijding van een geluidsdrempel). De backend veilig publiek toegankelijk gemaakt via Cloudflare-tunnels op een Raspberry Pi. Daarnaast een uitgebreid Threat Model opgeleverd dat aantoont waarom de transitie naar Edge AI en LoRa cruciaal is voor de overlevingskans van de sensor in het veld.
+- **Techstack:** `ESP32 (I2S)` `Cloudflare Tunnels` `Security Architecture` `IoT Threat Modeling` `YAMNet/Python (Team stack)`.
+- [Uitgebreide versie](projects/defensie-versterken-verstoren/project.md)
+
+## Autonomous Vineyard Drone - SAW Aero - 03-2025 t/m 06-2025
+
+Autonome drone voor wijngaardmonitoring die een route kan vliegen en NDVI-data verzamelt via een low-cost camera-oplossing.
+
+- **Rol:** Drone Pilot & NDVI Sensor Engineer, ArduPilot Configurator.
+- **Probleem:** Het project startte met beperkte documentatie en een overgenomen prototype, waardoor veel reverse engineering nodig was.
+- **Resultaat:** Een autonoom vliegende drone met NDVI-prototype, live RGB/NDVI-visualisatie en een praktische basis voor irrigatiemonitoring.
+- **Techstack:** `Python` `OpenCV` `Raspberry Pi NoIR` `ArduPilot`.
+- [Uitgebreide versie](projects/autonomous-drone/autonomous-vineyard-drone.md)

@@ -1,0 +1,89 @@
+site_name: Caspar Niekus - Portfolio
+site_description: Embedded engineer portfolio — projecten in firmware, IoT en robotica
+site_author: Caspar Niekus
+
+theme:
+  name: material
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.expand
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.tabs.link
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      languages:
+        - locale: nl
+          default: true
+          name: Nederlands
+          build: true
+          site_name: Mijn Portfolio
+          site_description: Een showcase van mijn projecten en vaardigheden
+          nav:
+            - Startpagina: index.md
+            - Projecten:
+                - Overzicht: projects.md
+                - Autonome Drone:
+                    - Overzicht: projects/autonomous-drone/autonomous-vineyard-drone.md
+                - Aura:
+                    - Overzicht: projects/aura-robot/aura-mapping-robot.md
+                    - GraphSLAM Module: projects/aura-robot/graphslammodule.md
+                - Coulomb Counter:
+                    - Overzicht: projects/coulombcounter/alflex-coulomb-counter.md
+                    - Flash Storage: projects/coulombcounter/flash-storage.md
+                    - MQTT Protocol: projects/coulombcounter/mqtt-protocol-spec.md
+                - StratusDash:
+                    - Overzicht: projects/stratusdash/stratusdash.md
+                    - Pairing Protocol: projects/stratusdash/stratusdash-pairing.md
+                - "Defensie: Versterken en Verstoren":
+                    - Overzicht: projects/defensie-versterken-verstoren/project.md
+            - Over Mij: about.md
+
+extra_css:
+  - stylesheets/extra.css
+
+
+markdown_extensions:
+  - attr_list
+  - admonition
+  - pymdownx.details
+  - md_in_html
+  - fenced_code
+  - pymdownx.highlight:
+      linenums: true
+      use_pygments: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist:
+      custom_checkbox: true
+      clickable_checkbox: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
