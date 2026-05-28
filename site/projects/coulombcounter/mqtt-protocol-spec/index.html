@@ -1483,7 +1483,7 @@
 
 <h1 id="mqtt-telemetry-protocol-binary">MQTT Telemetry Protocol (Binary)</h1>
 <h2 id="doelstelling">Doelstelling</h2>
-<p>Het apparaat moet data versturen richting de backend zodat het in de InfluxDB database kan komen. Hierbij moeten <strong>LOSSLESS</strong> data opgestuurd worden en na pakketverlies moet er alleen tijdsresolutie verloren gaan, geen data.</p>
+<p>Het apparaat moet data versturen richting de backend zodat het in de InfluxDB database kan komen. Hierbij moet lossless data opgestuurd worden en na pakketverlies moet er alleen tijdsresolutie verloren gaan, geen data.</p>
 <h3 id="criteria">Criteria</h3>
 <ol>
 <li>De ESP32 mag geen data versturen naar een niet luisterende backend. Er is een handshake nodig.</li>
@@ -1492,12 +1492,10 @@
 <li>Elk bericht moet volledig self containing zijn (inclusief calibratie-factor en Run ID).</li>
 <li>Minimale overhead (binair packed struct, geen JSON).</li>
 </ol>
-<hr />
 <h2 id="1-de-architectuur-handshake">1. De Architectuur (Handshake)</h2>
 <p>Om te voorkomen dat de ESP32 meet terwijl de database/MQTT luisteraar offline is, wordt er een strikte <em>Start Request</em> flow gebruikt.</p>
 <p><img alt="flowchart of the entire web architecture" src="../image.png" /></p>
 <p>De ESP stuurt <code>START_REQ</code> elke 2 seconden opnieuw totdat <code>START_ACK</code> ontvangen is. Als dit te lang duurt (10+ seconden) of het apparaat heeft sowieso geen verbinding met de MQTT broker, dan wordt dit aan de gebruiker getoond.</p>
-<hr />
 <h2 id="2-het-data-protocol">2. Het Data Protocol</h2>
 <p>Het protocol is een binair protocol om overhead van tekstgebaseerde protocollen te vermijden. Alles is Little Endian volgorde en</p>
 <h3 id="header-fixed-32-bytes">Header (Fixed - 32 Bytes)</h3>
@@ -1629,7 +1627,6 @@ Ook belangrijk: een <code>uint16</code> max is 65,535ms (~65 seconden). Als er l
 <h3 id="protocol-overhead">Protocol overhead</h3>
 <p>Met een laag stroomverbruik wordt er nu dus wel extra data verstuurd met de 32-byte header. Stel je hebt maar elke 5 secondes een puls, dan verstuur je elke 5 secondes 32 bytes aan header en 4 bytes aan echte payload data.</p>
 <p>Dit klinkt als veel overhead, maar in de praktijk is dit niet bepaald een probleem, aangezien we wifi gebruiken. MQTT en TCP voegen ook nog extra overhead toe, wat veel groter zal zijn dan ons 38 byte berichtje, dus het besparen om toch nog wat bytes niet te hoeven versturen betekent alleen dat de robuustheid van het protocol omlaag gaat.</p>
-<hr />
 <h2 id="3-implementatie-details">3. Implementatie Details</h2>
 <h3 id="c-structuur-esp32">C Structuur (ESP32)</h3>
 <p><code>__attribute__((packed))</code> wordt gebruikt padding van de compiler te voorkomen.</p>
@@ -1692,15 +1689,18 @@ Ook belangrijk: een <code>uint16</code> max is 65,535ms (~65 seconden). Als er l
 </code></pre></div></td></tr></table></div>
 <h4 id="waar-moet-de-backend-op-letten">Waar moet de backend op letten?</h4>
 <p>Sequence ID gaat overflowen na 65535 berichtjes (~3.7 dagen op 5s p. bericht). Dit betekent dat de backend dit veilig moet afhandelen.</p>
-<hr />
 <h2 id="4-data-reconstructie">4. Data Reconstructie</h2>
 <p>Hoe worden er van bytes fysieke waardes gemaakt (Amps) in de backend?</p>
 <p><strong>1. Totaal Lading (Coulombs)</strong>
 De integer "totalPulses" wordt vermenigvuldigd met de factor. Dit voorkomt drift door floats op de microcontroller.
-$$TotaalCoulombs = (Header.TotalPulses + \sum Event.DeltaPulses) \times Header.Factor$$</p>
+$$
+TotaalCoulombs = (Header.TotalPulses + \sum Event.DeltaPulses) \times Header.Factor
+$$</p>
 <p><strong>2. Stroomsterkte (Ampère)</strong>
-Stroom is lading per tijdseenheid ($I = Q/t$).
-$$Ampere_{event} = \frac{Event.DeltaPulses \times Header.Factor}{Event.DeltaMs / 1000.0}$$
+Stroom is lading per tijdseenheid (<span class="arithmatex">\(I = Q/t\)</span>).
+$$
+Ampere_{event} = \frac{Event.DeltaPulses \times Header.Factor}{Event.DeltaMs / 1000.0}
+$$
 <em>Bij deze berekening mag deltaMs niet 0 zijn, wat niet echt kan, maar check wel even.</em></p>
 
 
@@ -1763,6 +1763,10 @@ $$Ampere_{event} = \frac{Event.DeltaPulses \times Header.Factor}{Event.DeltaMs /
     
     
       <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
       
     
   </body>

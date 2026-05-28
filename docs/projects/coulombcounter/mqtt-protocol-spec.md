@@ -2,7 +2,7 @@
 
 ## Doelstelling
 
-Het apparaat moet data versturen richting de backend zodat het in de InfluxDB database kan komen. Hierbij moeten **LOSSLESS** data opgestuurd worden en na pakketverlies moet er alleen tijdsresolutie verloren gaan, geen data.
+Het apparaat moet data versturen richting de backend zodat het in de InfluxDB database kan komen. Hierbij moet lossless data opgestuurd worden en na pakketverlies moet er alleen tijdsresolutie verloren gaan, geen data.
 
 ### Criteria
 
@@ -12,8 +12,6 @@ Het apparaat moet data versturen richting de backend zodat het in de InfluxDB da
 4. Elk bericht moet volledig self containing zijn (inclusief calibratie-factor en Run ID).
 5. Minimale overhead (binair packed struct, geen JSON).
 
------
-
 ## 1. De Architectuur (Handshake)
 
 Om te voorkomen dat de ESP32 meet terwijl de database/MQTT luisteraar offline is, wordt er een strikte *Start Request* flow gebruikt.
@@ -21,8 +19,6 @@ Om te voorkomen dat de ESP32 meet terwijl de database/MQTT luisteraar offline is
 ![flowchart of the entire web architecture](image.png)
 
 De ESP stuurt `START_REQ` elke 2 seconden opnieuw totdat `START_ACK` ontvangen is. Als dit te lang duurt (10+ seconden) of het apparaat heeft sowieso geen verbinding met de MQTT broker, dan wordt dit aan de gebruiker getoond.
-
------
 
 ## 2. Het Data Protocol
 
@@ -71,8 +67,6 @@ Ook belangrijk: een `uint16` max is 65,535ms (~65 seconden). Als er langer geen 
 Met een laag stroomverbruik wordt er nu dus wel extra data verstuurd met de 32-byte header. Stel je hebt maar elke 5 secondes een puls, dan verstuur je elke 5 secondes 32 bytes aan header en 4 bytes aan echte payload data.
 
 Dit klinkt als veel overhead, maar in de praktijk is dit niet bepaald een probleem, aangezien we wifi gebruiken. MQTT en TCP voegen ook nog extra overhead toe, wat veel groter zal zijn dan ons 38 byte berichtje, dus het besparen om toch nog wat bytes niet te hoeven versturen betekent alleen dat de robuustheid van het protocol omlaag gaat.
-
------
 
 ## 3. Implementatie Details
 
@@ -127,17 +121,18 @@ EVENT_FMT  = '<HH'
 
 Sequence ID gaat overflowen na 65535 berichtjes (~3.7 dagen op 5s p. bericht). Dit betekent dat de backend dit veilig moet afhandelen.
 
------
-
 ## 4. Data Reconstructie
 
 Hoe worden er van bytes fysieke waardes gemaakt (Amps) in de backend?
 
 **1. Totaal Lading (Coulombs)**
 De integer "totalPulses" wordt vermenigvuldigd met de factor. Dit voorkomt drift door floats op de microcontroller.
-$$TotaalCoulombs = (Header.TotalPulses + \sum Event.DeltaPulses) \times Header.Factor$$
+$$
+TotaalCoulombs = (Header.TotalPulses + \sum Event.DeltaPulses) \times Header.Factor
+$$
 
 **2. Stroomsterkte (Ampère)**
 Stroom is lading per tijdseenheid ($I = Q/t$).
-$$Ampere_{event} = \frac{Event.DeltaPulses \times Header.Factor}{Event.DeltaMs / 1000.0}$$
-*Bij deze berekening mag deltaMs niet 0 zijn, wat niet echt kan, maar check wel even.*
+$$
+Ampere_{event} = \frac{Event.DeltaPulses \times Header.Factor}{Event.DeltaMs / 1000.0}
+$$
