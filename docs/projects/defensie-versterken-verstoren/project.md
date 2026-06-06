@@ -1,33 +1,67 @@
 # Defensie: Versterken en Verstoren - 03-2026 t/m 06-2026
 
-**Mijn Rol:** Embedded Firmware & Security Engineer
+Dit project was een proof-of-concept voor een akoestische sensor-node die harde geluiden detecteert, audio naar een backend stuurt en daar classificatie via YAMNet mogelijk maakt. Mijn bijdrage lag bij embedded firmware, certificaatverificatie en security-analyse van de netwerkarchitectuur.
 
-*Een proof-of-concept voor een gedistribueerd, akoestisch sensornetwerk, ontworpen in samenwerking met het 101 CEMA Bataljon om te waarschuwen voor vijandelijke activiteiten door middel van AI-audioclassificatie.*
+**Mijn rol:** Embedded Firmware & Security Engineer
 
-In de basis is dit project een autonome akoestische sensor-node. De ESP32 luistert, stuurt audio in chunks bij een hard geluid naar de backend, waar een YAMNet model het classificeert. Binnen dit teamproject heb ik de ontwikkeling van frontend en de AI-classificatie aan mijn teamgenoten overgelaten. Mijn verantwoordelijkheid lag bij de embedded firmware van de sensor-nodes (ESP32) en het in kaart brengen van de netwerk- en operationele veiligheid.
+## Context
 
-## Technische inzichten & belangrijkste resultaten
+Het project werd uitgevoerd binnen de studio Dark Tech en had een sterke focus op technologie, veiligheid en ethiek. Het team werkte aan een sensorconcept dat in een tactische context signalen zoals voertuigen of schoten zou kunnen detecteren.
 
-In militaire context is betrouwbaarheid en onzichtbaarheid essentieel. De uitdagingen in dit project zaten vooral in de architectuur, hardware-limitaties en security.
+De frontend en AI-classificatie werden vooral door teamgenoten ontwikkeld. Mijn werk zat aan de sensor-node en de vraag of de architectuur veilig en praktisch genoeg was voor een realistische inzetcontext.
 
-### De DMA Double-Buffer (Ping-Pong Buffer)
+## Het probleem
 
-Om continu audio te kunnen opnemen zonder de main loop (en de wifi-stack) te blokkeren, ontwierp ik initieel een oplossing met een analoge piëzo-contactmicrofoon. Ik schreef een low-level implementatie waarbij de analoge pin met 16 kHz werd uitgelezen en direct via Direct Memory Access (DMA) in een dubbele buffer werd geplaatst.
+Een akoestische sensor-node is technisch niet alleen een audioproject. In een tactische context tellen ook betrouwbaarheid, energieverbruik, zichtbaarheid, netwerkveiligheid en misbruikrisico's.
 
-Zodra de eerste helft van de buffer vol was, vuurde het systeem een interrupt af: de software kon deze helft verwerken en versturen, terwijl de hardware op de achtergrond (via DMA) de tweede helft bleef vullen. Dit werkte technisch perfect, maar in de praktijk bleek dat de audiokwaliteit van de piëzo-microfoon onvoldoende was voor de AI-classificatie. Ik heb deze complexe code daarom geschrapt en ben overgestapt op een standaard digitale I2S-microfoon. De audiokwaliteit van de I2S microfoon werkte goed met de AI-analyse.
+De eerste architectuur werkte als prototype, maar was kwetsbaar: audio ging naar een backend, de netwerkroute was nog niet sterk genoeg beveiligd en de communicatiekeuzes pasten niet goed bij een omgeving met elektronische oorlogsvoering.
 
-### Threat Modeling & Netwerkbeveiliging
+## Wat ik implementeerde
 
-Omdat dit systeem bedoeld is voor het slagveld, heb ik een uitgebreide security-analyse uitgevoerd op onze eigen architectuur. Hieruit kwamen een aantal kritieke kwetsbaarheden en oplossingsrichtingen:
+Ik werkte aan de ESP32-firmware voor de sensor-node. De node luistert naar audio, detecteert relevante geluidsniveaus en stuurt audiochunks naar de backend voor classificatie.
 
-- **MITM & Apparaat-Authenticatie:** Het initiele HTTP(S)-verkeer was kwetsbaar voor Man-in-the-Middle aanvallen. Door over te stappen op HTTPS met strikte certificaatverificatie (WiFiClientSecure) is de payload versleuteld. Daarnaast heb ik geadviseerd om unieke device-tokens te implementeren om te voorkomen dat een vijand de backend kan overspoelen met valse audiogegevens ("spoofing").
-- **SNI-Lekkage vs. VPN:** De opdrachtgever suggereerde een VPN om de verbinding te verbergen. Mijn analyse toonde aan dat een VPN (zoals WireGuard) te veel RAM en CPU-overhead vereist voor een ESP32. Hoewel HTTPS de inhoud van het verkeer beschermt, lekt het doeldomein nog steeds via *Server Name Indication (SNI)*. Een VPN is pas haalbaar als de node-hardware wordt geüpgraded naar een single-board computer. Uit gesprekken met het 101 CEMA Bataljon bleek dat dit op te lossen is door een VPS in te huren en vanaf daar de data door te sturen met een VPN. Toegang tot een VPS hebben wij niet, maar de rest van ons systeem is qua beveiliging identiek met bepaalde militaire systemen.
-- **De Connectiviteits-dilemma's:** Wi-Fi is tactisch onbruikbaar door de hoge zichtbaarheid. LTE (4G) lost het bereikprobleem op, maar civiele zendmasten zijn in conflictgebieden onbetrouwbaar. LoRa is qua stealth ideaal, maar mist de bandbreedte voor ruwe audio. De uiteindelijke aanbeveling voor een toekomstige iteratie is de transitie naar *Edge AI*: door een model lokaal op de ESP32 te draaien, hoeft het apparaat alleen nog maar kleine, binaire metadata te sturen via een Mesh-netwerk of LoRa, wat de elektromagnetische signatuur drastisch verlaagt.
+Een belangrijk deel van mijn implementatie was het verbeteren van de netwerkbeveiliging. Ik implementeerde HTTPS met certificaatverificatie via `WiFiClientSecure`, zodat de sensor niet blind data naar een endpoint stuurt zonder de serveridentiteit te controleren.
 
-### Ethische Dillema's
+Ook onderzocht ik een low-level audio-opzet met een analoge piëzo-contactmicrofoon en DMA double buffering. Deze oplossing werkte technisch, maar de audiokwaliteit was niet goed genoeg voor AI-classificatie. Daarom stapte ik over op een digitale I2S-microfoon. Dat was minder "clever", maar beter voor het systeemdoel.
+
+## Wat ik analyseerde en adviseerde
+
+Naast implementatie maakte ik een security-analyse van de architectuur. Daarin keek ik naar Man-in-the-Middle-aanvallen, apparaat-authenticatie, spoofing, SNI-lekkage, VPN-overhead, WiFi-zichtbaarheid, LTE-afhankelijkheid en LoRa-bandbreedte.
+
+Mijn belangrijkste aanbeveling was dat een toekomstige versie minder ruwe audio zou moeten versturen. Door Edge AI lokaal op de sensor te draaien, hoeft de node alleen nog kleine metadata of classificatie-events te verzenden. Dat maakt LoRa of mesh-communicatie realistischer en verlaagt de elektromagnetische zichtbaarheid.
+
+## Belangrijke technische keuzes
+
+### DMA was niet automatisch de beste oplossing
+
+De DMA double-buffer werkte: terwijl de hardware de ene helft van de buffer vulde, kon de firmware de andere helft verwerken. Toch heb ik die route verlaten omdat de piëzo-microfoon onvoldoende bruikbare audio opleverde.
+
+Dit was een goede systeemles: een technisch nette implementatie is niet waardevol als de data niet geschikt is voor het einddoel.
+
+### Certificaatverificatie was noodzakelijk
+
+Alleen "HTTPS gebruiken" is niet genoeg wanneer een embedded device de serveridentiteit niet goed valideert. Door certificaatverificatie toe te voegen werd de verbinding beter beschermd tegen Man-in-the-Middle-aanvallen.
+
+### WiFi en ruwe audio passen slecht bij tactische inzet
+
+WiFi is zichtbaar en ruwe audio vraagt relatief veel bandbreedte. LoRa is juist interessant door bereik en lage zichtbaarheid, maar kan geen ruwe audio dragen. Daarom kwam mijn advies uit op lokale classificatie en het verzenden van compacte events.
+
+## Ethische reflectie
 
 De focus van de studio Dark Tech lag voornamelijk op ethiek. Dit product, mocht dit geïmplementeerd worden, komt ook met ethische kwesties. Zou je zo'n systeem als overheid in risicogebieden al moeten installeren? Wat doe je dan met deze data? Deze vragen hebben wij als team ook gesteld en behandeld.
 
-### **Gebruikte technologieën**
+<!-- Ik wil deze sectie verder uitwerken. -->
 
-`C++` `ESP32` `I2S Audio` `DMA` `Cloudflare Tunnels` `Cybersecurity (Threat Modeling)`
+## Resultaat
+
+Het project leverde een werkende proof-of-concept sensor-node op en een duidelijker beeld van wat een volgende iteratie nodig heeft: betere device-authenticatie, minder afhankelijkheid van ruwe audio, lokale classificatie en een communicatievorm die past bij tactische beperkingen.
+
+Voor mijn portfolio laat dit project vooral zien dat ik niet alleen naar code kijk, maar ook naar dreigingsmodellen, operationele beperkingen en de vraag of een technische keuze in de echte context standhoudt.
+
+## Gerelateerde documenten
+
+- [Security Research](security-research.md): Onderzoek naar de staat van het project wat betreft veiligheid.
+
+## Gebruikte technologieën
+
+`C++` `ESP32` `I2S Audio` `DMA` `WiFiClientSecure` `HTTPS` `Cloudflare Tunnels` `YAMNet` `Threat Modeling`

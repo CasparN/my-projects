@@ -10,7 +10,7 @@ Aura was een proof-of-concept voor een autonome beveiligingsrobot in een magazij
 
 ## Context
 
-Ons team wou een autonome patrouillerende robot bouwen die kon navigeren in een magazijnomgeving en daarnaast klimaat- en luchtkwaliteitsdata kon verzamelen. De robot was gebaseerd op een Kobuki Rover met een LiDAR en draaide op een Raspberry Pi.
+Het team wilde een autonome patrouillerende robot bouwen die kon navigeren in een magazijnomgeving en daarnaast klimaat- en luchtkwaliteitsdata kon verzamelen. De robot was gebaseerd op een Kobuki Rover met een LiDAR en draaide op een Raspberry Pi.
 
 Voor de productvisie maakte ik ook het storyboard, schreef ik het script en produceerde ik de promotievideo, niet vereist voor school, maar omdat het leuk was. Maar de kern van mijn technische bijdrage zat in het autonomieprobleem: hoe weet een robot waar hij is in een omgeving die hij nog niet kent?
 
@@ -18,7 +18,7 @@ Voor de productvisie maakte ik ook het storyboard, schreef ik het script en prod
 
 De standaardroute voor dit soort robotica is vaak ROS met bestaande SLAM-packages. Onze Kobuki Rover had echter drivers die niet goed compatibel waren met de standaard ROS-oplossingen. Daardoor kon ik niet simpelweg een bestaande stack configureren.
 
-Ik moest zelf een SLAM systeem bouwen die LiDAR-scans en odometrie combineerde, live op een Raspberry Pi draaide en bruikbare kaarten kon genereren voor latere navigatie.
+Ik moest zelf een SLAM-pijplijn bouwen die LiDAR-scans en odometrie combineerde, live op een Raspberry Pi draaide en bruikbare kaarten kon genereren voor latere navigatie.
 
 ## Wat ik bouwde
 

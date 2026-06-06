@@ -1,6 +1,8 @@
 # Lokale dataopslag voor offline modus
 
-Dit document is een deelonderzoek (afkomstig uit een groter onderzoek) van mijn onderzoeksverslag over de Coulomb Counter. Met dit fragment laat ik zien hoe ik complexe hardwarebeperkingen analyseer en vertaal naar een efficiënte software-architectuur.
+!!! note "Onderzoeksverslag"
+    Deze pagina is een stuk uit mijn onderzoeksverslag voor Alflex.
+    Dit document is in originele staat hier te lezen om mijn onderzoeksvaardigheden te tonen.
 
 Deelvraag 5 luidt:
 > Hoe kan gemeten data effectief lokaal worden opgeslagen en beheerd op de

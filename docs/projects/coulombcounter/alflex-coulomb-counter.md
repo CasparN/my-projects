@@ -1,46 +1,89 @@
-# Coulomb Counter - Alfex Technologies - 09-2025 t/m 02-2026
+# Coulomb Counter - Alflex Technologies - 09-2025 t/m 02-2026
 
-**Mijn Rol:** Solo Embedded Software Engineer (Stage bij Alflex Technologies)
+Tijdens mijn stage bij Alflex Technologies ontwikkelde ik een autonome Coulomb Counter voor langdurige stroommetingen aan ultra-low-power IoT-apparaten. Het systeem moest weken tot maanden kunnen meten zonder constante pc-verbinding, data betrouwbaar bufferen en afwijkingen in stroomverbruik zichtbaar maken.
 
-Alflex Technologies ontwerpt en produceert ultra-low-power IoT-apparaten die jarenlang autonoom op een enkele batterij moeten functioneren. Om de levensduur te garanderen is langdurig en accuraat meten van het stroomverbruik essentieel.
+**Mijn rol:** Solo Embedded Software Engineer
 
-Industriële oplossingen zoals de Joulescope JS110 zijn zeer accuraat, maar vereisen een constante pc-verbinding en de software wordt instabiel bij tests die langer dan 12 uur duren en vereisen enorm veel opslag. Mijn opdracht was het doorontwikkelen van een bestaand intern prototype tot een solide, autonome Coulomb Counter (bestaande uit een ATtiny1616 meet-module en een ESP32-S3 control-module) die weken- of maandenlang "sluipstroom-bugs" in het veld kan opsporen.
+## Context
 
-## De AI Valkuil
+Alflex ontwikkelt IoT-apparaten die jarenlang op een batterij moeten draaien. Om zulke producten te valideren is langdurig meten essentieel. Bestaande meetoplossingen zoals de Joulescope JS110 zijn zeer accuraat, maar minder geschikt voor autonome veldmetingen: ze vereisen een pc-verbinding, genereren veel data en de software werd instabiel bij tests langer dan ongeveer 12 uur.
 
-Dit project was een enorme technische realitycheck. In de eerste weken van mijn stage leunde ik zwaar op AI-gegenereerde code om de complexe communicatie en RTOS-taken (Real-Time Operating System) op te zetten. Dit resulteerde in onstabiele spaghetti-code en onverklaarbare stack overflows. Tijdens een stevige, maar terechte code review werd duidelijk dat mijn fundamentele kennis van C onvoldoende was voor dit niveau van embedded engineering.
+Mijn opdracht was het doorontwikkelen van een intern prototype tot een betrouwbaar embedded meetsysteem met een ATtiny1616 meetmodule en een ESP32-S3 controlmodule.
 
-Na deze reality check heb ik de ontwikkeling twee weken volledig stilgelegd. Ik ben in de theorie gedoken om de taal écht te doorgronden. Ik heb [Brian "Beej" Halls](https://beej.us/guide/bgc/pdf/bgc_a4_bw_1.pdf) werk doorgelezen en oefeningen gedaan. Daarna heb ik de firmware vanaf de grond af opnieuw opgebouwd. Ik verving de foutgevoelige RTOS-taken door een voorspelbare, simpelere, non-blocking superloop architectuur. Dynamische geheugenallocatie (malloc) heb ik niet gebruikt om heap-fragmentatie te voorkomen (externe libraries natuurlijk wel, maar ik zelf niet). Het resultaat was een firmware die niet meer crashte en waar ik 100% controle over had.
+## Het probleem
 
-## Systeemarchitectuur & Datastromen
+Het apparaat moest drie dingen tegelijk goed doen:
 
-De data stroomt van de ruwe hardware-interrupts helemaal naar een cloud-dashboard. Hieronder is de volledige workflow van de firmware te zien.  
+- zeer kleine en grote stromen betrouwbaar meten (0.1 uA tot 2.5A);
+- data lossless naar een backend sturen wanneer er verbinding is;
+- offline metingen lokaal bufferen zonder de beperkte flashopslag te snel te verslijten.
 
-![system architecture diagram of the firmware](SAD.svg)
+Daarnaast moest het systeem praktisch bruikbaar zijn voor engineers: starten, meten, synchroniseren en achteraf analyseren in dashboards.
 
-## Belangrijke Doorbraken
+## Wat ik bouwde
 
-Tijdens het onderzoek en de realisatie heb ik een aantal kritieke architectuurkeuzes moeten maken om de stabiliteit en efficiëntie te waarborgen.
+Ik bouwde de firmware-architectuur opnieuw op rond een voorspelbare non-blocking superloop. De ATtiny1616 telt pulsen en stuurt geaggregeerde meetdata via UART naar de ESP32-S3. De ESP32 beheert de meting, buffering, opslag, MQTT-communicatie, statusinformatie en synchronisatie met de backend.
 
-### Pragmatische Data-acquisitie (UART vs. PCNT)
+Voor de backend koos ik een hybride opzet:
 
-Hoe tel je tot 62.000 pulsen per seconde op een ESP32 zonder de CPU te overbelasten?
+- **InfluxDB** voor tijdsreeksdata.
+- **MariaDB** voor metadata, context, firmwareversies, testnamen en apparaatdata.
+- **Grafana** voor analyse en visualisatie.
+- **Mosquitto MQTT** voor telemetrie.
 
-* **Directe CPU-interrupts** bleken direct onhaalbaar; de CPU trok dit simpelweg niet naast de Wi-Fi en display-taken.
-* **De ESP32 PCNT (Pulse Counter) module** was hardwarematig ideaal (geen CPU-belasting, 10ms resolutie), maar in de praktijk zorgden Wi-Fi-interrupts voor timing-afwijkingen van 1 tot 10%, wat de grafieken onbruikbaar maakte.  
-* **De pragmatische keuze (UART):** Uiteindelijk koos ik ervoor om de ATtiny1616 het telwerk te laten doen. Deze aggregeert de pulsen en stuurt elke 100ms een update via UART naar de ESP32. Dit kostte iets aan tijdsresolutie, maar garandeerde 100% stabiliteit en betrouwbaarheid binnen de tijdlijn van het project.
+## De technische realitycheck
 
-### De Hybride Backend (InfluxDB + MariaDB)
+In het begin probeerde ik te snel complexe communicatie en RTOS-taken op te zetten, deels met AI-gegenereerde code. Ik had zo'n grote opdracht voor me, ik dacht dat ik hele snelle stappen moest zetten om het af te krijgen. Dat leidde tot instabiele firmware, onduidelijke stack overflows en code waar ik te weinig controle over had.
 
-De meter genereert een enorme stroom aan tijdsreeksdata. InfluxDB (een Time-Series Database) is hiervoor perfect, maar het heeft één grote zwakte: *High Cardinality*. Als je te veel unieke metadata (zoals firmwareversies, testnamen of apparaat-ID's) als 'tags' opslaat, crasht de database door een overvloed aan index-sleutels.
+Na een stevige code review heb ik bewust twee weken afstand genomen van de implementatie. Ik ben dieper in C gedoken, heb de firmware rustig opnieuw ontworpen en ben teruggegaan naar een eenvoudigere architectuur die ik volledig begreep. Ik vermeed eigen dynamische geheugenallocatie en koos voor expliciete state, vaste buffers en een voorspelbare loop.
 
-Mijn oplossing was een hybride architectuur. Een MariaDB (SQL) database slaat alle context en metadata van de test op en genereert een unieke UUID. InfluxDB slaat vervolgens alléén de ruwe meetdata op, gekoppeld aan diezelfde UUID. Grafana (het visualisatieplatform) voegt deze twee werelden naadloos samen via 'dashboard variables', waardoor engineers eenvoudig complexe queries kunnen draaien zonder dat de backend overbelast raakt.
+Dat was een belangrijk leerpunt: voor embedded systemen is "het compileert" niet genoeg. Je moet kunnen uitleggen waarom het stabiel blijft. Als je een stack overflow tegenkomt, maak de stack dan niet groter. Vind de oorzaak en los het daar op.
 
-## **Validatie & Acceptatiecriteria**
+## Belangrijke technische keuzes
 
-Een meetinstrument is nutteloos als de data niet klopt. Om de accuraatheid van de Coulomb Counter te bewijzen, heb ik een uitgebreid testprotocol ontworpen.
-Het apparaat werd in een gesloten serieschakeling geplaatst met de Joulescope JS110 (de industriestandaard). Omdat de Joulescope via zeer snelle MOSFETs schakelt tussen shuntweerstanden, bedraagt de *burden voltage* (spanningsval) slechts maximaal 25mV op 1 Ampère, wat de test niet beïnvloedt. De Coulomb Counter is getest over het volledige dynamische bereik (van 0,1 µA slaapstroom tot 2A actieve piekstroom) met een harde acceptatiegrens: de gemeten waarden mochten **maximaal 1% afwijken** van de Joulescope over een duurtest van 100+ uur. Dit is gelukt!
+### UART in plaats van directe ESP32 pulse counting
 
-## Gerelateerde Documenten
+De ESP32 moest tot ongeveer 62.000 pulsen per seconde kunnen verwerken naast WiFi, displaytaken en communicatie. Directe CPU-interrupts waren te zwaar. De PCNT-hardwaremodule leek ideaal, maar in de praktijk veroorzaakten WiFi-interrupts timingafwijkingen van 1 tot 10 procent.
 
-[MQTT Protocol Spec](mqtt-protocol-spec.md) is een document geschreven voor dit project en beschrijft de gedachtes achter het MQTT Protocol. Verder is de offline mode en de manier hoe data opgeslagen wordt beschreven in [Flash Storage](flash-storage.md), wat een stuk uit mijn onderzoeksverslag is.
+De pragmatische keuze was om de ATtiny1616 het telwerk te laten doen. Die aggregeert pulsen en stuurt elke 100 ms een update via UART. Dat verlaagde de tijdsresolutie iets, maar maakte het systeem stabiel en betrouwbaar binnen de projectplanning.
+
+### Binair MQTT-protocol
+
+Ik ontwierp een compact binair MQTT-protocol met headers, sequence IDs, run IDs, timestamps en cumulatieve pulstellingen. Daardoor kan de backend bij pakketverlies de totale lading blijven reconstrueren. In het slechtste geval gaat tijdsresolutie verloren, maar niet de totale meetdata.
+
+### Offline opslag op raw flash
+
+Voor offline metingen koos ik geen bestandssysteem, maar een sequentiële buffer op een ruwe flashpartitie. De meetdata heeft een vaste structuur van 4 bytes per event, waardoor bestandssysteemoverhead relatief duur zou zijn.
+
+Door data te aggregeren en per flashpagina met CRC op te slaan, kan het apparaat langdurig offline meten met controle over opslagduur, wear-leveling en dataintegriteit.
+
+### Hybride database
+
+InfluxDB is sterk voor tijdsreeksdata, maar gevoelig voor high cardinality wanneer te veel metadata als tags wordt opgeslagen. Daarom slaat MariaDB alle context op en schrijft InfluxDB alleen de ruwe meetdata weg, gekoppeld via een UUID. Grafana combineert beide werelden via dashboard variables.
+
+## Validatie
+
+Een meetinstrument is pas nuttig als de data klopt. Daarom ontwierp ik een testprotocol waarbij de Coulomb Counter in serie werd geplaatst met een Joulescope JS110 als referentie.
+
+Het systeem werd getest over een groot dynamisch bereik: van 0,1 uA slaapstroom tot 2 A actieve piekstroom. De acceptatiegrens was maximaal 1 procent afwijking ten opzichte van de Joulescope over een duurtest van meer dan 100 uur. Die grens is gehaald met meerdere Coulomb Counters (kijken naar hardwareafwijkingen).
+
+## Resultaat
+
+Het resultaat was een stabiel embedded meetsysteem dat autonoom kan meten, data online naar een dockerized backend pusht en offline meetdata lokaal kan bufferen. De firmware werd begrijpelijker, voorspelbaarder en beter te valideren dan het oorspronkelijke prototype.
+
+Dit project laat voor mij het duidelijkst zien dat ik kan omgaan met serieuze embedded beperkingen: timing, geheugen, flashslijtage, dataverlies, validatie en systeemarchitectuur.
+
+## Wat ik leerde
+
+Ik leerde vooral dat betrouwbaarheid een ontwerpkeuze is. Simpele architectuur is niet minder professioneel wanneer de constraints daarom vragen. De overstap van complexe RTOS-code naar een voorspelbare superloop was geen stap terug, maar de keuze die het systeem stabiel maakte.
+
+Ook leerde ik hoe belangrijk meetbare acceptatiecriteria zijn. De 1 procent-grens en 100+ uur test maakten het resultaat veel sterker dan "het lijkt te werken".
+
+## Technische proof
+
+- [MQTT Protocol Spec](mqtt-protocol-spec.md) - technische specificatie van het binaire protocol.
+- [Flash Storage](flash-storage.md) - onderzoeksfragment over offline opslag, aggregatie, CRC en flashbeperkingen.
+
+## Gebruikte technologieën
+
+`C` `ESP-IDF` `ATtiny1616` `ESP32-S3` `UART` `MQTT` `Mosquitto` `Python` `InfluxDB` `MariaDB` `Grafana` `Docker`

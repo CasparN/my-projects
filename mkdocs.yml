@@ -32,41 +32,31 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
 
+nav:
+  - Startpagina: index.md
+  - Projecten:
+      - Overzicht: projects.md
+      - Autonome Drone:
+          - Overzicht: projects/autonomous-drone/autonomous-vineyard-drone.md
+      - Aura:
+          - Overzicht: projects/aura-robot/aura-mapping-robot.md
+          - GraphSLAM Module: projects/aura-robot/graphslammodule.md
+      - Coulomb Counter:
+          - Overzicht: projects/coulombcounter/alflex-coulomb-counter.md
+          - Flash Storage: projects/coulombcounter/flash-storage.md
+          - MQTT Protocol: projects/coulombcounter/mqtt-protocol-spec.md
+      - StratusDash:
+          - Overzicht: projects/stratusdash/stratusdash.md
+          - Pairing Protocol: projects/stratusdash/stratusdash-pairing.md
+      - "Defensie: Versterken en Verstoren":
+          - Overzicht: projects/defensie-versterken-verstoren/project.md
+  - Over Mij: about.md
+
 plugins:
   - search
-  - i18n:
-      docs_structure: suffix
-      fallback_to_default: true
-      languages:
-        - locale: nl
-          default: true
-          name: Nederlands
-          build: true
-          site_name: Mijn Portfolio
-          site_description: Een showcase van mijn projecten en vaardigheden
-          nav:
-            - Startpagina: index.md
-            - Projecten:
-                - Overzicht: projects.md
-                - Autonome Drone:
-                    - Overzicht: projects/autonomous-drone/autonomous-vineyard-drone.md
-                - Aura:
-                    - Overzicht: projects/aura-robot/aura-mapping-robot.md
-                    - GraphSLAM Module: projects/aura-robot/graphslammodule.md
-                - Coulomb Counter:
-                    - Overzicht: projects/coulombcounter/alflex-coulomb-counter.md
-                    - Flash Storage: projects/coulombcounter/flash-storage.md
-                    - MQTT Protocol: projects/coulombcounter/mqtt-protocol-spec.md
-                - StratusDash:
-                    - Overzicht: projects/stratusdash/stratusdash.md
-                    - Pairing Protocol: projects/stratusdash/stratusdash-pairing.md
-                - "Defensie: Versterken en Verstoren":
-                    - Overzicht: projects/defensie-versterken-verstoren/project.md
-            - Over Mij: about.md
 
 extra_css:
   - stylesheets/extra.css
-
 
 markdown_extensions:
   - attr_list

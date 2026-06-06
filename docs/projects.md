@@ -42,3 +42,14 @@ Autonome drone voor wijngaardmonitoring die een route kan vliegen en NDVI-data v
 - **Resultaat:** Een autonoom vliegende drone met NDVI-prototype, live RGB/NDVI-visualisatie en een praktische basis voor irrigatiemonitoring.
 - **Techstack:** `Python` `OpenCV` `Raspberry Pi NoIR` `ArduPilot`.
 - [Uitgebreide versie](projects/autonomous-drone/autonomous-vineyard-drone.md)
+
+## AURA - Autonome LiDAR Robot - 09-2024 t/m 02-2025
+
+Autonome beveiligingsrobot voor een magazijnomgeving met kaartopbouw, navigatie en klimaat-/luchtkwaliteitsmeting. Het project waar ik vanaf de basis een GraphSLAM-oplossing in C++ bouwde.
+
+- **Rol:** Lead C++ / SLAM Engineer.
+- **Probleem:** De Kobuki Rover had geen bruikbare ROS-drivers, dus ik moest een eigen oplossing bouwen om LiDAR-scans en odometrie te combineren voor navigatie in een onbekende omgeving.
+- **Resultaat:** Een werkend GraphSLAM-systeem met GICP en Ceres Solver dat live LiDAR-data verwerkte, drift corrigeerde via loop closures en een bruikbare kaart opleverde.
+- **Techstack:** `C++` `CMake` `SLAM` `LiDAR` `Ceres Solver` `PCL` `Linux (Ubuntu)` `Raspberry Pi`.
+- [Uitgebreide versie](projects/aura-robot/aura-mapping-robot.md)
+- [GraphSLAM Deep Dive](projects/aura-robot/graphslammodule.md)

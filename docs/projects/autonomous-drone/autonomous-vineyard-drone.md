@@ -1,21 +1,62 @@
-# Autonomous Vineyard Drone – SAW Aero - 03-2025 t/m 06-2025
+# Autonomous Vineyard Drone - SAW Aero - 03-2025 t/m 06-2025
 
-**Mijn rol:** Drone Pilot & NDVI Sensor Engineer, ArduPilot Configurator
+Dit project draaide om het doorontwikkelen van een overgenomen droneprototype voor autonome wijngaardmonitoring. Mijn bijdrage zat vooral in systeemintegratie, Mission Planner-configuratie, vliegtesten, hardware-aanpassingen en een low-cost NDVI-cameraprototype.
 
-Dit project richt zich op het ontwikkelen van een autonome drone voor wijngaarden, met als einddoel het monitoren van de gezondheid van de wijnstokken en het optimaliseren van de irrigatie. Ons team heeft een prototype ontvangen van het vorige team, wat de eerste basis vormde, maar er was niet veel documentatie. Door veel onderzoek en reverse engineering hebben we uiteindelijk een autonoom vliegende drone kunnen realiseren, die in staat is om een vooraf bepaalde route te vliegen en data te verzamelen.
+**Mijn rol:** Drone Pilot, Mission Planner Configurator & NDVI Sensor Engineer
 
-![the drone shown on grass](drone-on-grass.png)
+![Drone op gras](drone-on-grass.png)
 
-## NDVI Sensor
+## Context
 
-Commerciële NDVI-camera’s zijn duur. Mijn onderzoek liet zien dat ik hun resultaten kon benaderen met een Raspberry Pi NoIR-camera en een blauwfilter. Het principe is om nabij-infrarood (NIR) licht vast te leggen in het rode kanaal van de camera en zichtbaar rood licht in het blauwe kanaal. Door deze beelden te verwerken met een **Python**- en **OpenCV**-script met de formule `(Red - Blue) / (Red + Blue)`, kan ik een visuele index van plantgezondheid genereren. Ik heb met succes een prototype gebouwd dat kan uitlezen van zowel de NoIR- als een standaard RGB-camera.  Op het dashboard heb ik een live feed toegevoegd wat duidelijk live RGB en NDVI beelden toont, wat een mooie demonstratie was. Helaas heb ik door tijdsdruk geen validatie kunnen uitvoeren met echte wijnstokken of een echte analyse kunnen doen.
+Het team ontving een prototype van een vorige projectgroep. Er was weinig documentatie en meerdere praktische onderdelen waren nog niet goed uitgewerkt. Het doel was om de drone autonoom een route te laten vliegen en beelddata te verzamelen die later gebruikt kon worden voor irrigatie- of plantgezondheidsanalyse.
 
-Dit project toont dat ik de volgende skills heb ontwikkeld:
+Dit was minder een "veel code schrijven"-project en meer een systeemproject: uitzoeken wat er al was, configureren wat niet klopte, hardware veilig maken en genoeg grip krijgen op het platform om betrouwbare vluchten uit te voeren.
 
-- **Reverse Engineering:** Het vermogen om een bestaand systeem te analyseren en door te ontwikkelen zonder uitgebreide documentatie.
-- **Onderzoek Toepassen:** Ik kan onderzoek doen naar wetenschappelijke concepten en deze vertalen naar praktische goedkopere oplossingen (NDVI).
-- **Opdrachtgever Communicatie:** Geleerd om proactief verwachtingen te managen en structuur aan te brengen in momenten waarop de vereisten of planning onduidelijk waren.
+## Het probleem
+
+De drone moest van overgenomen prototype naar bruikbare demonstrator. Dat betekende:
+
+- begrijpen hoe de bestaande hardware en software in elkaar zat;
+- een RC controller correct aansluiten en configureren;
+- Mission Planner-missies opzetten;
+- vliegtesten uitvoeren;
+- hardwareproblemen herkennen, zoals een motor die de verkeerde kant op draaide;
+- een cameramodule bouwen en monteren zonder de drone onbruikbaar te maken.
+
+## Wat ik deed
+
+Ik configureerde de drone in Mission Planner, zette autonome missies op en voerde vliegtesten uit als pilot. Ook heb ik een controller aangesloten op de drone, omdat het vorige groepje dacht dat dit niet nodig was. Het was wel nodig, voor de veiligheid en voor prototyping. Tijdens het testen identificeerde ik onder andere een motor die de verkeerde kant op draaide. Dat zijn kleine configuratiefouten, maar het is wel bepalend voor of een drone vliegt.
+
+Voor het NDVI-gedeelte werkte ik met een Raspberry Pi NoIR-camera en een standaard RGB-camera. Ik maakte een low-cost camerasysteem waarmee live RGB- en NDVI-achtige beelden konden worden getoond. Ook ontwierp en 3D-printte ik een behuizing om de twee camera's op de drone te monteren.
+
+## NDVI-prototype
+
+Commerciële NDVI-camera's zijn duur. Mijn onderzoek liet zien dat een benadering mogelijk was met een Raspberry Pi NoIR-camera en een blauwfilter. Het idee is om nabij-infrarood licht en zichtbaar licht zo te verwerken dat een indicatie van plantgezondheid ontstaat.
+
+Met Python en OpenCV verwerkte ik de camerabeelden tot een live visualisatie. Dit was vooral bedoeld als demonstratie en technische basis. Door tijdsdruk is het systeem niet gevalideerd op echte wijnstokken en is er geen volledige analyse uitgevoerd.
+
+## Resultaat
+
+Het resultaat was een drone die autonoom missies kon vliegen en een werkend prototype voor live RGB/NDVI-visualisatie had. Het project leverde ook praktische systeemkennis op: configureren, testen, vliegen, hardware aanpassen en omgaan met onvolledige documentatie.
+
+De waarde van dit project zit voor mij niet in een grote softwarearchitectuur, maar in het vermogen om een complex fysiek systeem werkend te krijgen.
+
+## Wat ik leerde
+
+Ik leerde dat drones vooral system engineering zijn. Een kleine configuratiefout, verkeerd gemonteerde motor of onduidelijke afhankelijkheid van de grondstationopzet kan het hele systeem onbetrouwbaar maken.
+
+Daarnaast leerde ik om onderzoeksconcepten zoals NDVI te vertalen naar een goedkope prototype-oplossing, en tegelijk eerlijk te blijven over validatie die nog ontbreekt.
+
+## Demonstratie
 
 <div style="width: 100%; aspect-ratio: 16 / 9;">
  <iframe width="100%" height="100%" src="https://www.youtube.com/embed/qA3IbLCrv7I?si=qUJpCn7GHYB-4ytg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="display: block; border: 0;"></iframe>
 </div>
+
+## Technische proof
+
+- [NDVI Dual-Camera Prototype](ndvi-camera-system.md) - technische deep dive over de RGB/NoIR camera-opzet, live streaming en NDVI-achtige verwerking.
+
+## Gebruikte technologieën
+
+`Mission Planner` `Python` `OpenCV` `Raspberry Pi NoIR` `RGB Camera` `3D Printing` `Drone Configuration`

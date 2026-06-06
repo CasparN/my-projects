@@ -1,5 +1,9 @@
 # StratusDash Pairing Architectuur
 
+!!! note "Project Documentatie"
+    Deze pagina is documentatie van het koppelingsproces.
+    Dit document is in originele staat hier te lezen om mijn documentatieproces te tonen.
+
 Dit document beschrijft hoe een StratusDash-apparaat koppelt met een account. We behandelen hierin de firmware, de backend en de web-UI.
 
 In het kort gebeurt het volgende:

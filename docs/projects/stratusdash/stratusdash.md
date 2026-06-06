@@ -1,56 +1,86 @@
 # StratusDash - 04-2025 t/m heden
 
-Mijn rollen als Product Engineer waren met dit product veelzijdig:
+StratusDash is een batterijgevoed e-paper weerstation dat binnenklimaat en weersverwachtingen toont op een rustig, altijd zichtbaar display. Ik bouwde het systeem van prototype naar een kleine pilot-batch van zeven apparaten die nu door vrienden en familie worden gebruikt.
 
-- Software: Full-stack development (embedded, backend, frontend).
-- Hardware: Component sourcing en enclosure design (3D-modellering).
-- Fabricage: Prototyping, houtbewerking en end-to-end assemblage.
+![StratusDash productfoto](image.png)
 
-![perfecte productfoto](image.png)
+## Context
 
-StratusDash is een op maat gebouwd slim weerstation met een groot 7,5-inch e-paperdisplay. Het werkt als een met wifi verbonden IoT-apparaat dat elke 15 minuten je binnenklimaat meet en externe weersverwachtingen toont. Het apparaat is batterijgevoed en kan 3-5 maanden werken zonder op te laden. Ik heb zeven units gemaakt als pilot-batch en geleverd aan echte gebruikers.
+Het idee begon thuis met een klein weerstation dat steeds batterijen leeg trok en waarvan de buitenmodule onbetrouwbaar was. Tijdens een schoolproject kreeg ik de kans om de basis van een beter alternatief te bouwen. Na die eerste tien weken ben ik er zelfstandig mee doorgegaan: firmware, backend, frontend, hardwarekeuzes, behuizing, assemblage en deployment.
 
-## De architectuur
+Het doel was niet alleen een werkend prototype. Het was een product dat mensen echt in hun huis kunnen plaatsen zonder er dagelijks aan te hoeven denken.
 
-### De Hardware
+## Mijn rol
 
-Het apparaat bestaat uit de volgende componenten:
+Ik werkte als product engineer aan alle onderdelen:
 
-- Firebeetle 2 ESP32E
-- 2500 mAh LiPo batterij (haalt de 6 maanden na optimalisatie, momenteel 3-4 maanden)
-- 7.5 inch GoodDisplay B/W ePaper scherm (met HAT)
-- BME280 luchtdruk, luchtvochtigheid en temperatuursensor
+- **Firmware:** ESP32-firmware, deep sleep, sensormetingen, e-paper rendering, OTA-updates en device pairing.
+- **Backend:** FastAPI-backend, MariaDB-database, weerdata-cache, device management en updatekanalen.
+- **Frontend:** gebruikersaccounts, device configuratie, locatiekeuze, pairing-flow, accountverwijdering en i18n voor Nederlands/Engels.
+- **Hardware en fabricage:** componentkeuze, prototyping, behuizing, houtbewerking en assemblage van zeven units.
 
-De Firebeetle 2 ESP32 E is gekozen door het lage stroomverbruik in deep sleep en de LiPo connector.
+## Het probleem
 
-#### Batterijduur
+Een weerstation klinkt simpel, maar het raakt veel systemen tegelijk. Het apparaat moet maanden op een accu draaien, snel genoeg opstarten om data op te halen, betrouwbaar koppelen met een account, veilig updates ontvangen en voor gewone gebruikers begrijpelijk blijven. De grootste spanning zat tussen gebruiksgemak en low-power gedrag. Elke extra netwerkactie, TLS-handshake of renderstap kost tijd en dus energie.
 
-Mijn doel was 6 maanden batterijduur. Verder heb ik door middel van mijn CoulombCounter nog de sluipstroom kunnen minimaliseren naar 54 uA. Een volgende versie met bijv. een PCB zou MOSFETs kunnen gebruiken om de display HAT elektrisch te isoleren wat het drastisch kan verlagen. Maar er ligt nu een hogere prioriteit op het verlagen van de actieve tijd. Dat gebruikt het grootste gedeelte van de stroom. Hiervoor is een ESP-IDF rewrite handig, aangezien we dan de HTTP connectie open kunnen laten en session resumption kunnen gebruiken (TLS vereist vrij veel tijd). De twee API requests zijn nu ongeveer 2-4 seconden per stuk.
+## Wat ik bouwde
 
-Een andere optimalisatie is het gebruiken van een statisch IP, zodat de wifi-verbinding sneller klaar is. Dit zou nog een aantal seconden van de wakkertijd afhalen. Momenteel is het apparaat 12-18 seconden wakker, door de API requests naar de 0.5s per stuk te halen en wifi-verbinding te optimaliseren kan dit naar de 6 tot 8 seconden gaan, waardoor we de batterijduur bijna kunnen verdubbelen.
+Het apparaat gebruikt een FireBeetle 2 ESP32-E, een 7,5-inch Good Display zwart-wit e-paper scherm, een BME280-sensor en een 2500 mAh LiPo. Elke cyclus meet het binnenklimaat, haalt de actuele configuratie en weersverwachting op, rendert de layout naar het e-paper display en gaat terug naar deep sleep.
 
-### De firmware
+Aan de serverkant draait een FastAPI-backend op een VPS. De backend beheert gebruikers, apparaten, layouts, OTA-kanalen en een weather cache, zodat externe API-calls niet onnodig vaak worden gedaan. De database gebruikt MariaDB met Alembic-migraties en constraints voor datakwaliteit.
 
-De firmware draait op momenteel op Arduino met een ingeplande refactor naar ESP-IDF. Het heeft de volgende functionaliteiten:
+De webapp is tweetalig via i18n en is bereikbaar via:
 
-- Veilige pairing met gebruikersaccounts: Het apparaat koppelt met een account om online o.a. de layout en de locatie aan te kunnen passen. Over dit proces [is hier meer te lezen](stratusdash-pairing.md), het is heel interessant!
-- Custom Layouts: De layouts worden ingeladen met JSONs van de backend. Hier kunnen iconen, tabellen en tekst over het hele scherm geplaatst worden. Deze layout wordt opgeslagen op het apparaat zelf.
-- Modulaire Firmware: De firmware bestaat uit veel verschillende modules, layout rendering zit in LayoutRenderer, SystemScreens zorgt voor o.a. de pairing en foutmelding schermen, WiFi Provisioning wordt behandeld in WifiProvisioning. OTAManager, SceenDriver, BatteryManager etc. 12 in totaal.
+- [stratusdash.nl](https://stratusdash.nl)
+- [stratusdash.com](https://stratusdash.com)
 
-### De Backend
+## Belangrijke technische keuzes
 
-De FastAPI backend draait op een VPS in Duitsland.
+### Batterijduur
 
-- Weather Cache: Voor elke locatie vraagt de backend weerinformatie op van de WeatherAPI en slaat deze op in de cache (in de database). Dit zorgt ervoor dat we zo efficient mogelijk omgaan met externe API calls.
-- Over-The-Air (OTA) Updates: De backend faciliteert de OTA. Elk apparaat kan als dev of als stable gemarkeerd worden en krijgt alleen die updates. Het apparaat weet hier zelf niks van af. Dit zorgt ervoor dat ik kan testen met mijn eigen apparaat, zodat ik niet per ongeluk een foutieve build deploy.
-- MariaDB & Alembic: De database is ontworpen met strikte validatie op database-niveau. Door middel van CHECK constraints (bijv. voor sensor-ranges en batterijvoltages) wordt corrupte data geweigerd voordat het weggeschreven kan worden. Daarnaast maken foreign keys met CASCADE DELETE het beheren van gebruikersdata veilig en eenvoudig; als een gebruiker zijn account verwijdert (vereist voor de GDPR), worden alle gekoppelde apparaten, tokens en sensor-readings automatisch opgeschoond. Databasemigraties worden as-code beheerd via Alembic.
+Het huidige apparaat haalt ongeveer 3 tot 5 maanden op een acculading. Met metingen via mijn Coulomb Counter heb ik de sluipstroom teruggebracht naar ongeveer 54 uA. De grootste winst zit nu niet meer in deep sleep, maar in het verkorten van de tijd dat de CPU wakker is.
 
-### De Frontend
+De firmware is momenteel Arduino-gebaseerd. Een toekomstige ESP-IDF rewrite zou helpen om HTTP/TLS efficiënter te maken, onder andere door connecties langer open te houden en session resumption te gebruiken. Ook een statisch IP kan de WiFi-connectietijd verkorten. Daarmee kan de actieve tijd mogelijk van 12-18 seconden naar 6-8 seconden.
 
-- Sticky Pairing URL: Als jij de QR code scant van het apparaat en je hebt nog geen account, dan blijft de link plakken, zodat wanneer "Verifieer Email" geklikt wordt in de mail je direct wordt ingelogd en naar het koppelen doorverwezen wordt. Zie [hier voor meer](stratusdash-pairing.md).
-- Privacy Policy / GDPR: Er is een privacy policy en een manier om je account te verwijderen. Dit betekent dat de website conform is aan de EU-regelgeving.
-- Location Guess: Bij het configureren van een apparaat moet je de locatie instellen. Dit veld wordt ingevuld door een IP adres locatie als gok, wat je dan kan aanpassen mocht het niet kloppen. De coordinaten zijn totaal niet zichtbaar voor de gebruiker.
+### Device pairing
 
-## Gerelateerde Documenten
+Het apparaat koppelt via een QR-code aan een gebruikersaccount. De firmware genereert een pairing attempt en een private device secret. De gebruiker scant de QR-code en claimt het apparaat via de webapp, terwijl het apparaat de claimstatus ophaalt bij de backend. De uiteindelijke API-token wordt alleen naar het fysieke apparaat teruggestuurd als het de private secret kent.
 
-De [Pairing Architectuur](stratusdash-pairing.md) beschrijft in detail hoe het koppelingsproces werkt: van QR-code generatie op het apparaat tot de beveiligde claim-flow in de backend. Verder is de [Coulomb Counter](../coulombcounter/alflex-coulomb-counter.md) gebruikt om het stroomverbruik van het apparaat in kaart te brengen en te optimaliseren.
+Deze flow voorkomt dat iemand met alleen de publieke QR-link de device-token kan stelen. Over het koppelproces is [hier](stratusdash-pairing.md) meer over te lezen.
+
+### Productwaardige backend
+
+De backend ondersteunt OTA-updates met aparte dev/stable-kanalen. Daardoor kan ik mijn eigen apparaat op dev laten draaien en gebruikersapparaten alleen stabiele builds geven. Ook ondersteunt het systeem accountverwijdering met cascading cleanup van apparaten, tokens en metingen.
+
+### Behuizing
+
+De behuizing is gemaakt uit zelf behandeld merantihout. Ik heb alles gezagen, gefreesd, geschuurd, gebeitst en gelakt en gelijmt. Binnenin zit een 3D geprintte omhulsing voor alle hardware, waarbij ook is nagedacht over ventilatie en repareerbaarheid. Dit gedeelte van het project heeft veel tijd gekost, maar ik heb zo veel geleerd en ik ben enorm trots op het eindresultaat.
+
+## Resultaat
+
+Ik heb zeven StratusDash-units gebouwd en geleverd aan echte gebruikers. Het project groeide van schoolprototype naar een klein product met firmware, backend, frontend, hardware, website, privacybeleid en een onderhoudbaar updateproces.
+
+Voor mij is StratusDash het bewijs dat ik een embedded product end-to-end kan bouwen. Producten die niet alleen op mijn bureau blijven, maar andere huizen echt mooier maakt. Een klant zei tegen mij dat wat ik heb gemaakt een kunstwerk was, wat precies mijn doel was toen ik dit ging maken.
+
+## Wat ik leerde
+
+StratusDash leerde mij vooral hoe duur elke productkeuze wordt zodra hardware, firmware, backend en gebruiker samenkomen. Wil je meerder layouts? Dat kan, maar dan moet de rendering van de data compleet aangepast worden. Wil je een houten behuizing? Dat gaat jou enorm veel tijd kosten als ontwikkelaar.
+
+Ook leerde ik dat low-power optimalisatie pas echt nuttig wordt wanneer je meet. Zonder mijn Coulomb Counter had ik veel minder precies geweten waar de energie verdween en niet kunnen berekenen wat voor batterij ik nodig had.
+
+## Wat ik nog ga leren
+
+Ik ga ook nog dingen leren in dit project. Ze zijn recentelijk allemaal het huis uit, maar nu moet ik nadenken over de volgende stap.
+
+- De TLS certificaten zullen over een paar jaar verlopen. Dan moet op een mooie manier afgehandeld worden.
+- Elke Firebeetle leest het batterijvoltage net anders uit. Dit is te kalibreren.
+- Het herschrijven van het project naar ESP-IDF zal nuttig zijn om de code beter te structureren en om de werktijd te verminderen.
+
+## Technische proof
+
+- [StratusDash Pairing Architectuur](stratusdash-pairing.md) - technische deep dive over het koppelproces.
+- [Coulomb Counter](../coulombcounter/alflex-coulomb-counter.md) - gebruikt om het stroomverbruik te meten en optimaliseren.
+
+## Gebruikte technologieën
+
+`Arduino` `ESP32` `E-Paper` `BME280` `FastAPI` `MariaDB` `Alembic` `OTA` `i18n` `VPS`

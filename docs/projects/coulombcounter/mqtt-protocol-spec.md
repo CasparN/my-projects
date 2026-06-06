@@ -1,5 +1,9 @@
 # MQTT Telemetry Protocol (Binary)
 
+!!! note "Project Documentatie"
+    Deze pagina is documentatie van het MQTT protocol om informatie van de CoulombCounter naar de backend te sturen.
+    Dit document is in originele staat hier te lezen om mijn documentatieproces te tonen.
+
 ## Doelstelling
 
 Het apparaat moet data versturen richting de backend zodat het in de InfluxDB database kan komen. Hierbij moet lossless data opgestuurd worden en na pakketverlies moet er alleen tijdsresolutie verloren gaan, geen data.
@@ -12,7 +16,7 @@ Het apparaat moet data versturen richting de backend zodat het in de InfluxDB da
 4. Elk bericht moet volledig self containing zijn (inclusief calibratie-factor en Run ID).
 5. Minimale overhead (binair packed struct, geen JSON).
 
-## 1. De Architectuur (Handshake)
+## 1. De Architectuur
 
 Om te voorkomen dat de ESP32 meet terwijl de database/MQTT luisteraar offline is, wordt er een strikte *Start Request* flow gebruikt.
 
@@ -40,7 +44,7 @@ Elk pakket begint met deze header. Dit bevat de "Anchor" waarden waarmee de back
 
 Totaal is 32 bytes. Velden 8 t/m 31 (Timestamp, Pulses, Factor) zijn niet relevant voor ACK en worden genegeerd/op 0 gezet. Ze worden wel verstuurd voor de header, maar niet uitgelezen. Het is zo simpeler om te implementeren.
 
-### Packet Types (Enums)
+### Packet Types
 
 De waarden voor het `Type` veld op offset 1:
 
