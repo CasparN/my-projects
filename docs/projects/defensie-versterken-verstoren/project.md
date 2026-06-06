@@ -48,9 +48,15 @@ WiFi is zichtbaar en ruwe audio vraagt relatief veel bandbreedte. LoRa is juist 
 
 ## Ethische reflectie
 
-De focus van de studio Dark Tech lag voornamelijk op ethiek. Dit product, mocht dit geïmplementeerd worden, komt ook met ethische kwesties. Zou je zo'n systeem als overheid in risicogebieden al moeten installeren? Wat doe je dan met deze data? Deze vragen hebben wij als team ook gesteld en behandeld.
+De focus van de studio Dark Tech lag niet alleen op wat technisch mogelijk is, maar vooral op wat er gebeurt zodra zo'n techniek echt werkt. Dit prototype lijkt op het eerste gezicht een sensor voor veiligheid: het kan een operator sneller wijzen op geluiden die mogelijk relevant zijn, zoals schoten, impact of voertuigen.
 
-<!-- Ik wil deze sectie verder uitwerken. -->
+Juist daar zit ook de gevaarlijke kant. Een microfoon neemt niet alleen het bedoelde event op. Hij kan ook stemmen, aanwezigheid, routines en gedragspatronen vastleggen van mensen die niet weten dat ze worden opgenomen. In een defensiecontext kan dat misschien worden verdedigd vanuit veiligheid, maar dezelfde infrastructuur kan ook veranderen in permanente surveillance.
+
+Daarnaast is een AI-classificatie geen bewijs. Een confidence-score kan in een dashboard snel voelen als zekerheid, terwijl het alleen een modelschatting is. Als zo'n detectie zonder verificatie wordt gebruikt voor bijvoorbeeld kinetische actie, verschuift verantwoordelijkheid van mensen naar een systeem dat de context niet begrijpt.
+
+Mijn belangrijkste ethische conclusie is daarom dat akoestische detectie hoogstens een signaleringsinstrument mag zijn. Het systeem mag menselijke aandacht sturen, maar niet zelfstandig betekenis geven aan een situatie. Ruwe audio moet zo min mogelijk worden opgeslagen, bewaartermijnen moeten technisch worden afgedwongen en beslissingen moeten altijd door meerdere bronnen en een mens worden gecontroleerd.
+
+Voor mij maakte dit project vooral duidelijk dat sommige dingen niet beter worden doordat je ze automatiseert. De techniek kan nuttig zijn, maar alleen als het ontwerp expliciet begrenst wat het systeem mag weten, bewaren en veroorzaken.
 
 ## Resultaat
 
