@@ -4,6 +4,8 @@ site_author: Caspar Niekus
 
 theme:
   name: material
+  favicon: assets/images/favicon.svg
+  logo: assets/images/favicon.svg
   font:
     text: Inter
     code: JetBrains Mono
