@@ -16,13 +16,13 @@ Voor de productvisie maakte ik ook het storyboard, schreef ik het script en prod
 
 ## Het probleem
 
-De standaardroute voor dit soort robotica is vaak ROS met bestaande SLAM-packages. Onze Kobuki Rover had echter drivers die niet goed compatibel waren met de standaard ROS-oplossingen. Daardoor kon ik niet simpelweg een bestaande stack configureren.
+Het normale pad voor dit soort robotica is vaak ROS met bestaande SLAM-packages. Onze Kobuki Rover had echter drivers die niet goed compatibel waren met de standaard ROS-oplossingen. Daardoor kon ik niet simpelweg een bestaande stack configureren.
 
-Ik moest zelf een SLAM systeem bouwen die LiDAR-scans en odometrie combineerde, live op een Raspberry Pi draaide en bruikbare kaarten kon genereren voor latere navigatie.
+Ik moest zelf een SLAM-systeem bouwen dat LiDAR-scans en odometrie combineerde, live op een Raspberry Pi draaide en bruikbare kaarten kon genereren voor latere navigatie.
 
 ## Wat ik bouwde
 
-Ik implementeerde een GraphSLAM-systeem in C++. De robot verzamelde LiDAR-scans, gebruikte wielodometrie als initiële bewegingsschatting en matchte opeenvolgende scans met GICP (Generalized Iterative Closest Point).
+Ik implementeerde een GraphSLAM-systeem in C++. De robot verzamelde LiDAR-scans, gebruikte wielodometrie als initiële bewegingsschatting en matchte opeenvolgende scans met GICP (Generalized Iterative Closest Point) via PCL.
 
 Wanneer de robot meer dan 15 cm had gereden, werd een nieuwe keyframe toegevoegd aan een graph. Bij een mogelijke loop closure werd Ceres Solver gebruikt om de graph te optimaliseren en opgebouwde drift terug te trekken naar een consistentere kaart.
 

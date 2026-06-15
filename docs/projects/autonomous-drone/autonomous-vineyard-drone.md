@@ -25,7 +25,7 @@ De drone moest van overgenomen prototype naar bruikbare demonstrator. Dat beteke
 
 ## Wat ik deed
 
-Ik configureerde de drone in Mission Planner, zette autonome missies op en voerde vliegtesten uit als pilot. Ook heb ik een controller aangesloten op de drone, omdat het vorige groepje dacht dat dit niet nodig was. Het was wel nodig, voor de veiligheid en voor prototyping. Tijdens het testen identificeerde ik onder andere een motor die de verkeerde kant op draaide. Dat zijn kleine configuratiefouten, maar het is wel bepalend voor of een drone vliegt.
+Ik configureerde de drone in Mission Planner, zette autonome missies op en voerde vliegtesten uit als pilot. Ook heb ik een controller aangesloten op de drone, omdat het vorige team dacht dat dit niet nodig was. Het was wel nodig voor de veiligheid en voor prototyping. Tijdens het testen identificeerde ik onder andere een motor die de verkeerde kant op draaide. Dat lijken kleine configuratiefouten, maar ze bepalen uiteindelijk of een drone veilig kan vliegen.
 
 Voor het NDVI-gedeelte werkte ik met een Raspberry Pi NoIR-camera en een standaard RGB-camera. Ik maakte een low-cost camerasysteem waarmee live RGB- en NDVI-achtige beelden konden worden getoond. Ook ontwierp en 3D-printte ik een behuizing om de twee camera's op de drone te monteren.
 
@@ -37,17 +37,19 @@ Met Python en OpenCV verwerkte ik de camerabeelden tot een live visualisatie. Di
 
 ## Resultaat
 
-Het resultaat was een drone die autonoom missies kon vliegen en een werkend prototype voor live RGB/NDVI-visualisatie had. Het project leverde ook praktische systeemkennis op: configureren, testen, vliegen, hardware aanpassen en omgaan met onvolledige documentatie.
-
-De waarde van dit project zit voor mij niet in een grote softwarearchitectuur, maar in het vermogen om een complex fysiek systeem werkend te krijgen.
+Het resultaat was een drone die autonoom missies kon vliegen, en beschikte over een werkend prototype voor live RGB- en NDVI-visualisatie. Daarnaast leverde het project veel praktische systeemkennis op: configureren, testen, vliegen, hardware aanpassen en omgaan met onvolledige documentatie.
 
 ## Wat ik leerde
 
-Ik leerde dat drones vooral system engineering zijn. Een kleine configuratiefout, verkeerd gemonteerde motor of onduidelijke afhankelijkheid van de grondstationopzet kan het hele systeem onbetrouwbaar maken.
+Ik leerde vooral hoe complex drones als systeem zijn. Een kleine configuratiefout of een verkeerd gemonteerde motor kan het hele systeem onbetrouwbaar maken. Veilig testen is daarom essentieel, net als het goed configureren van fallbacks. Wat moet de drone bijvoorbeeld doen wanneer het radiosignaal wegvalt?
 
-Daarnaast leerde ik om onderzoeksconcepten zoals NDVI te vertalen naar een goedkope prototype-oplossing, en tegelijk eerlijk te blijven over validatie die nog ontbreekt.
+Ook heb ik geleerd dat bij het overnemen van een bestaand systeem moeten eerdere keuzes en aannames opnieuw worden gevalideerd, zeker wanneer de documentatie onvolledig is. Zo bleek de aanname dat een RC-controller niet nodig was in de praktijk onjuist.
+
+Daarnaast leerde ik hoe je een onderzoeksconcept als NDVI kunt vertalen naar een betaalbaar prototype. Binnen de looptijd van tien weken was er helaas niet genoeg tijd om dit onderdeel volledig uit te werken.
 
 ## Demonstratie
+
+Hierbij een video van de drone die rondvliegt, autonoom.
 
 <div style="width: 100%; aspect-ratio: 16 / 9;">
  <iframe width="100%" height="100%" src="https://www.youtube.com/embed/qA3IbLCrv7I?si=qUJpCn7GHYB-4ytg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="display: block; border: 0;"></iframe>

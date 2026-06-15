@@ -21,7 +21,7 @@ belangrijk is in drie situaties:
   afwijkend gedrag vertoont, kan een Coulomb Counter tijdelijk worden
   aangesloten, bijvoorbeeld in een auto, om gedurende enkele uren te meten wat
   er precies gebeurt.
-- Als de wifi-verbinding bijvoorbeeld zes uur wegvalt, mag een meting die al
+- Als de WiFi-verbinding bijvoorbeeld zes uur wegvalt, mag een meting die al
   zeven dagen loopt niet direct ongeldig worden. Het apparaat moet blijven
   meten, desnoods op een lagere resolutie.
 
@@ -129,7 +129,7 @@ dezelfde flash gebruikt voor zowel opslag als programmacode.
 
 Een schrijftijd van 0,8 tot 5 milliseconden is kort genoeg om geen grote impact
 te hebben op de superlooparchitectuur. De wistijd van 70 tot 500 milliseconden
-is echter te lang. Dit kan zelfs impact hebben op wifi en MQTT, waardoor de
+is echter te lang. Dit kan zelfs impact hebben op WiFi en MQTT, waardoor de
 verbinding mogelijk wordt verbroken.
 
 Dit betekent dat het overschrijven van flash tijdens dezelfde meting niet

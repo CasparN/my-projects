@@ -17,9 +17,9 @@ Slim, batterijgevoed weerstation met 7,5-inch e-paper dat binnenklimaat en exter
 
 Ontwikkeling van een autonoom en betrouwbaar stroommeetsysteem voor het langdurig analyseren van ultra-low-power IoT-apparaten.
 
-- **Rol:** Solo Embedded Software Engineer (Semester 5 Stage).
+- **Rol:** Embedded Software Engineering-stagiair (embedded en backend)
 - **Probleem:** Industriële energiemeters (zoals de Joulescope) vereisen een constante pc-verbinding en vertonen software-instabiliteit bij tests langer dan 12 uur. Alflex had behoefte aan een autonoom, embedded alternatief om verborgen stroomvretende-bugs in het veld te vinden.
-- **Resultaat:** Een stabiele firmware-architectuur op basis van een non-blocking superloop. Data wordt via een zelfontworpen binair MQTT-protocol lossless naar een dockerized backend (InfluxDB + MariaDB) gepusht. In offline mode buffert het apparaat tot minimaal twee maanden aan data op een ruwe flash-partitie met oog op wear-leveling. In online mode wordt PSRAM gebruikt om deze data te bufferen.
+- **Resultaat:** Een stabiele firmware-architectuur op basis van een non-blocking superloop. Data wordt via een zelfontworpen binair MQTT-protocol naar een backend in Docker-containers (InfluxDB + MariaDB) gepusht. In offlinemodus buffert het apparaat tot minimaal twee maanden aan data op een ruwe flash-partitie met oog op wear-leveling. In onlinemodus wordt PSRAM gebruikt om deze data te bufferen.
 - **Techstack:** `C (ESP-IDF)` `ATtiny1616` `ESP32-S3` `MQTT (Mosquitto)` `Python` `InfluxDB` `MariaDB` `Grafana`.
 - [Uitgebreide versie](projects/coulombcounter/alflex-coulomb-counter.md)
 
@@ -27,9 +27,9 @@ Ontwikkeling van een autonoom en betrouwbaar stroommeetsysteem voor het langduri
 
 Een event-driven akoestische sensor voor het detecteren en classificeren van militaire dreigingen (zoals schoten en voertuigen) via YAMNet.
 
-- **Rol:** Security & Infrastructure Architect / Firmware optimalisatie.
+- **Rol:** Creative Technologist - firmware en security-analyse
 - **Probleem:** Het team had een werkend prototype voor geluidsclassificatie, maar de architectuur was onveilig voor tactisch gebruik (gevoelig voor Man-in-the-Middle aanvallen en elektronische oorlogsvoering) en lokaal geïsoleerd.
-- **Resultaat:** De firmware-architectuur modulair en event-driven gemaakt (zendt alleen bij overschrijding van een geluidsdrempel). De backend veilig publiek toegankelijk gemaakt via Cloudflare-tunnels op een Raspberry Pi. Daarnaast een uitgebreid Threat Model opgeleverd dat aantoont waarom de transitie naar Edge AI en LoRa cruciaal is voor de overlevingskans van de sensor in het veld.
+- **Resultaat:** De firmware-architectuur modulair en event-driven gemaakt (zendt alleen bij overschrijding van een geluidsdrempel). De backend veilig publiek toegankelijk gemaakt via Cloudflare-tunnels op een Raspberry Pi. Daarnaast een threat model opgeleverd waaruit bleek waarom edge-AI en een verbindingstechnologie zoals LoRa relevante vervolgrichtingen waren voor de overlevingskans van de sensor in het veld.
 - **Techstack:** `ESP32 (I2S)` `Cloudflare Tunnels` `Security Architecture` `IoT Threat Modeling` `YAMNet/Python (Team stack)`.
 - [Uitgebreide versie](projects/defensie-versterken-verstoren/project.md)
 
@@ -47,7 +47,7 @@ Autonome drone voor wijngaardmonitoring die een route kan vliegen en NDVI-data v
 
 Autonome beveiligingsrobot voor een magazijnomgeving met kaartopbouw, navigatie en klimaat-/luchtkwaliteitsmeting. Het project waar ik vanaf de basis een GraphSLAM-oplossing in C++ bouwde.
 
-- **Rol:** Lead C++ / SLAM Engineer.
+- **Rol:** Verantwoordelijk voor C++ en SLAM
 - **Probleem:** De Kobuki Rover had geen bruikbare ROS-drivers, dus ik moest een eigen oplossing bouwen om LiDAR-scans en odometrie te combineren voor navigatie in een onbekende omgeving.
 - **Resultaat:** Een werkend GraphSLAM-systeem met GICP en Ceres Solver dat live LiDAR-data verwerkte, drift corrigeerde via loop closures en een bruikbare kaart opleverde.
 - **Techstack:** `C++` `CMake` `SLAM` `LiDAR` `Ceres Solver` `PCL` `Linux (Ubuntu)` `Raspberry Pi`.

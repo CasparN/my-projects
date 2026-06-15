@@ -14,11 +14,13 @@ Mijn opdracht was het doorontwikkelen van een intern prototype tot een betrouwba
 
 Het apparaat moest drie dingen tegelijk goed doen:
 
-- zeer kleine en grote stromen betrouwbaar meten (0.1 uA tot 2.5A);
-- data lossless naar een backend sturen wanneer er verbinding is;
+- zeer kleine en grote stromen betrouwbaar meten (0,1 uA tot 2,5 A);
+- meetdata betrouwbaar naar een backend sturen en tijdelijk lokaal bufferen bij verbindingsverlies;
 - offline metingen lokaal bufferen zonder de beperkte flashopslag te snel te verslijten.
 
-Daarnaast moest het systeem praktisch bruikbaar zijn voor engineers: starten, meten, synchroniseren en achteraf analyseren in dashboards.
+Daarnaast moest het systeem praktisch bruikbaar zijn voor engineers: starten, meten, synchroniseren en achteraf analyseren in dashboards. 
+
+Wanneer de MQTT-broker niet bereikbaar was, bufferde het apparaat de metingen lokaal op flash. Wanneer de Python-consumer niet beschikbaar was, bleven de berichten in de MQTT-broker staan. Berichten werden pas bevestigd nadat ze succesvol in de database waren opgeslagen. Tijdens de online- en offlinetests is daarbij geen meetdata verloren gegaan. Bij eventueel pakketverlies kan de exacte tijdverdeling minder nauwkeurig worden, terwijl de cumulatieve lading reconstrueerbaar blijft.
 
 ## Wat ik bouwde
 
@@ -31,19 +33,19 @@ Voor de backend koos ik een hybride opzet:
 - **Grafana** voor analyse en visualisatie.
 - **Mosquitto MQTT** voor telemetrie.
 
-## De technische realitycheck
+## Waarom ik de hele firmware opnieuw ben begonnen
 
-In het begin probeerde ik te snel complexe communicatie en RTOS-taken op te zetten, deels met AI-gegenereerde code. Ik had zo'n grote opdracht voor me, ik dacht dat ik hele snelle stappen moest zetten om het af te krijgen. Dat leidde tot instabiele firmware, onduidelijke stack overflows en code waar ik te weinig controle over had.
+In het begin probeerde ik te snel complexe communicatie en RTOS-taken op te zetten, deels met AI-gegenereerde code. Omdat de opdracht zo groot was, dacht ik dat ik snel grote stappen moest zetten om alles op tijd af te krijgen. Dat leidde, in combinatie met een ambitieuze planning, tot instabiele firmware, onduidelijke stack overflows en code waar ik te weinig controle over en begrip van had.
 
-Na een stevige code review heb ik bewust twee weken afstand genomen van de implementatie. Ik ben dieper in C gedoken, heb de firmware rustig opnieuw ontworpen en ben teruggegaan naar een eenvoudigere architectuur die ik volledig begreep. Ik vermeed eigen dynamische geheugenallocatie en koos voor expliciete state, vaste buffers en een voorspelbare loop.
+Na een stevige code review heb ik bewust twee weken afstand genomen van de implementatie. Ik ben dieper in C gedoken, heb de firmware rustig opnieuw ontworpen en ben teruggegaan naar een eenvoudigere architectuur die ik volledig begreep. Ik vermeed eigen dynamische geheugenallocatie en koos voor expliciete state, vaste buffers en een voorspelbare superloop met losse modules, elk met een eigen verantwoordelijkheid en state.
 
-Dat was een belangrijk leerpunt: voor embedded systemen is "het compileert" niet genoeg. Je moet kunnen uitleggen waarom het stabiel blijft. Als je een stack overflow tegenkomt, maak de stack dan niet groter. Vind de oorzaak en los het daar op.
+Dat was een belangrijk leerpunt: voor embedded systemen is "het compileert" niet genoeg. Je moet kunnen uitleggen waarom het stabiel blijft. Als je een stack overflow tegenkomt, vergroot de stack dan niet blind. Onderzoek eerst waardoor het geheugengebruik groeit en los de oorzaak op. Daarna heb ik deze aanpak vaker toegepast: minder symptoombestrijding en problemen vaker direct bij de oorzaak oplossen. Een voorbeeld was de MQTT-outbox: in plaats van simpelweg meer geheugen toe te wijzen, heb ik onderzocht waarom berichten zich ophoopten en de hoeveelheid berichten in de outbox gelimiteerd.
 
 ## Belangrijke technische keuzes
 
 ### UART in plaats van directe ESP32 pulse counting
 
-De ESP32 moest tot ongeveer 62.000 pulsen per seconde kunnen verwerken naast WiFi, displaytaken en communicatie. Directe CPU-interrupts waren te zwaar. De PCNT-hardwaremodule leek ideaal, maar in de praktijk veroorzaakten WiFi-interrupts timingafwijkingen van 1 tot 10 procent.
+De ESP32 moest tot ongeveer 62.000 pulsen per seconde kunnen verwerken naast WiFi, displaytaken en communicatie. Directe CPU-interrupts waren te zwaar. De PCNT-hardwaremodule leek ideaal, maar volgens de analyse en de embedded engineers zouden WiFi-interrupts timingafwijkingen kunnen veroorzaken van 1 tot 10 procent.
 
 De pragmatische keuze was om de ATtiny1616 het telwerk te laten doen. Die aggregeert pulsen en stuurt elke 100 ms een update via UART. Dat verlaagde de tijdsresolutie iets, maar maakte het systeem stabiel en betrouwbaar binnen de projectplanning.
 
@@ -53,9 +55,15 @@ Ik ontwierp een compact binair MQTT-protocol met headers, sequence IDs, run IDs,
 
 ### Offline opslag op raw flash
 
-Voor offline metingen koos ik geen bestandssysteem, maar een sequentiële buffer op een ruwe flashpartitie. De meetdata heeft een vaste structuur van 4 bytes per event, waardoor bestandssysteemoverhead relatief duur zou zijn.
+Voor offline metingen koos ik geen bestandssysteem, maar een sequentiële buffer op een ruwe flashpartitie. De meetdata heeft een vaste structuur van 4 bytes per event, waardoor bestandssysteemoverhead relatief duur zou zijn. Door data te aggregeren en per flashpagina met CRC op te slaan, kan het apparaat langdurig offline meten met controle over opslagduur, wear-leveling en dataintegriteit.
 
-Door data te aggregeren en per flashpagina met CRC op te slaan, kan het apparaat langdurig offline meten met controle over opslagduur, wear-leveling en dataintegriteit.
+Het uploaden van deze data was ook een leuk probleem: ik had te maken met een MQTT-outbox die snel te vol raakte. Daarom heb ik een systeem geïmplementeerd met drie fasen.
+
+- De pakketjes werden van flash afgelezen door de OfflineHandler en naar de DataTransport module gestuurd.
+- De DataTransport module heeft 2 MB PSRAM waar alle data in werd gebufferd. Mocht dit vol zitten dan wachtte de OfflineHandler totdat er weer 20% beschikbaar zou zijn via een callback.
+- De DataTransport module stuurde deze data als MQTT-pakketjes op, maar zorgde er altijd voor dat er niet meer dan een bepaalde hoeveelheid pakketjes in de MQTT-outbox vast zouden zitten. Mocht dit wel zo zijn, dan wachtte de module totdat er weer wat bij kon.
+
+Zonder backpressure bleef de MQTT-outbox groeien, waardoor het geheugengebruik opliep en de firmware uiteindelijk instabiel werd.
 
 ### Hybride database
 
@@ -65,7 +73,7 @@ InfluxDB is sterk voor tijdsreeksdata, maar gevoelig voor high cardinality wanne
 
 Een meetinstrument is pas nuttig als de data klopt. Daarom ontwierp ik een testprotocol waarbij de Coulomb Counter in serie werd geplaatst met een Joulescope JS110 als referentie.
 
-Het systeem werd getest over een groot dynamisch bereik: van 0,1 uA slaapstroom tot 2 A actieve piekstroom. De acceptatiegrens was maximaal 1 procent afwijking ten opzichte van de Joulescope over een duurtest van meer dan 100 uur. Die grens is gehaald met meerdere Coulomb Counters (kijken naar hardwareafwijkingen).
+Het systeem werd getest over een groot dynamisch bereik: van 0,1 uA slaapstroom tot 2 A actieve piekstroom. Voor de drie geteste Coulomb Counters bleef de afwijking in cumulatief gemeten lading na meer dan 100 uur onder 1% ten opzichte van de Joulescope JS110.
 
 ## Resultaat
 

@@ -8,14 +8,14 @@
 
 Momenteel werkt het systeem als volgt:
 
-1. De ESP32 start op en verbind met wifi.
+1. De ESP32 start op en verbind met WiFi.
 2. De ESP32 detecteert een luid geluid en begint met versturen.
 3. De ESP32 stuurt voor 20 seconden geluid per batch.
 4. Als er nog steeds een luid geluid is, blijft het versturen, anders stopt het versturen.
 5. De ESP32 geeft door dat dit het einde is van de opname aan de backend.
 6. De backend plakt alle losse bestandjes aan elkaar en stuurt ze naar de AI analyse.
 
-Dit systeem vereist een actieve internetverbinding met wifi. Het doel van dit apparaat is om vijandelijke activiteiten te kunnen detecteren. Als het apparaat een actieve wifi-verbinding vereist, dan is het vrij zichtbaar voor een voorzichtige en slimme vijand. Dit is ook makkelijk te verstoren, waardoor onze oplossing niet meer informatie kan doorgeven. Dat is een van de grootste beperkingen.
+Dit systeem vereist een actieve internetverbinding met WiFi. Het doel van dit apparaat is om vijandelijke activiteiten te kunnen detecteren. Als het apparaat een actieve WiFi-verbinding vereist, dan is het vrij zichtbaar voor een voorzichtige en slimme vijand. Dit is ook makkelijk te verstoren, waardoor onze oplossing niet meer informatie kan doorgeven. Dat is een van de grootste beperkingen.
 
 Verder stuurt het embedded apparaat ruwe audiobestanden naar HTTPS endpoints, maar we verifiëren de server identiteit niet. Dit zorgt ervoor dat het apparaat vatbaar is voor Man-in-the-Middle aanvallen (MITM). Iemand op hetzelfde netwerk kan de audio-opnames onderscheppen en/of manipuleren. In deze militaire context is dat natuurlijk een groot probleem.
 
@@ -43,7 +43,7 @@ Door elk apparaat bijvoorbeeld een token te geven kunnen we onderscheid houden t
 
 ## 3. Connectiviteit in het Veld
 
-Momenteel gebruikt het apparaat een wifi-verbinding. Dit is in het veld natuurlijk wat minder handig, een wifi-netwerk is enorm zichtbaar. Het is makkelijk te verstoren en dan zijn alle apparaten nutteloos. Ook is het bereik van wifi beperkt waardoor je voor elk apparaat een eigen wifi-netwerk moet opzetten. Maar wat voor andere opties bestaan er dan?
+Momenteel gebruikt het apparaat een WiFi-verbinding. Dit is in het veld natuurlijk wat minder handig, een WiFi-netwerk is enorm zichtbaar. Het is makkelijk te verstoren en dan zijn alle apparaten nutteloos. Ook is het bereik van WiFi beperkt waardoor je voor elk apparaat een eigen WiFi-netwerk moet opzetten. Maar wat voor andere opties bestaan er dan?
 
 ### LTE - Mobiel netwerk (4G)
 
@@ -61,4 +61,4 @@ Andere militaire opties zijn tactische Mesh-netwerken. Hierbij fungeert elke ESP
 
 Er zijn bepaalde dingen die we moeten implementeren, zoals TLS verificatie om MITM aanvallen tegen te gaan. Als dat geïmplementeerd is hebben wij volledige end to end encryptie van alle data. Een VPN verbinding is te complex, maar biedt wel extra veiligheid richting onze domeinen. Verder is apparaat-specifieke authenticatie een vereiste om te implementeren. Zonder dit kan iemand die weet wat voor data onze API accepteert onze data verpesten met neppe data.
 
-Edge AI en LoRa zijn wel de juiste richting voor dit product, maar momenteel te complex om goed te implementeren. Hier moet zeker wel onderzoek naar gedaan worden, want het staat ons toe om compleet van wifi/LTE af te stappen. Hierdoor zal het apparaat een stuk robuuster en minder zichtbaar worden op het elektromagnetische spectrum.
+Edge AI en LoRa zijn wel de juiste richting voor dit product, maar momenteel te complex om goed te implementeren. Hier moet zeker wel onderzoek naar gedaan worden, want het staat ons toe om compleet van WiFi/LTE af te stappen. Hierdoor zal het apparaat een stuk robuuster en minder zichtbaar worden op het elektromagnetische spectrum.
