@@ -10,6 +10,8 @@ Alflex ontwikkelt IoT-apparaten die jarenlang op een batterij moeten draaien. Om
 
 Mijn opdracht was het doorontwikkelen van een intern prototype tot een betrouwbaar embedded meetsysteem met een ATtiny1616 meetmodule en een ESP32-S3 controlmodule.
 
+![De Coulomb Counter](coulomb-counter.png)
+
 ## Het probleem
 
 Het apparaat moest drie dingen tegelijk goed doen:
