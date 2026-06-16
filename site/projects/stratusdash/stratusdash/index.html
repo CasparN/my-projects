@@ -495,6 +495,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../autonomous-drone/ndvi-camera-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NDVI Camera Module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -996,6 +1024,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#telemetrie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Telemetrie
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1186,6 +1225,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../defensie-versterken-verstoren/security-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1354,6 +1421,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#telemetrie" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Telemetrie
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1463,14 +1541,18 @@
 <p>Het apparaat koppelt via een QR-code aan een gebruikersaccount. De firmware genereert een pairing attempt en een private device secret. De gebruiker scant de QR-code en claimt het apparaat via de webapp, terwijl het apparaat de claimstatus ophaalt bij de backend. De uiteindelijke API-token wordt alleen naar het fysieke apparaat teruggestuurd als het de private secret kent.</p>
 <p>Deze flow voorkomt dat iemand met alleen de publieke QR-link de device-token kan stelen. Over het koppelproces is <a href="../stratusdash-pairing/">hier</a> meer over te lezen.</p>
 <h3 id="productwaardige-backend">Productwaardige backend</h3>
-<p>De backend ondersteunt OTA-updates met aparte dev/stable-kanalen. Daardoor kan ik mijn eigen apparaat op dev laten draaien en gebruikersapparaten alleen stabiele builds geven. Ook ondersteunt het systeem accountverwijdering met cascading cleanup van apparaten, tokens en metingen.</p>
+<p>De backend ondersteunt OTA-updates met aparte dev/acc/stable-kanalen. Daardoor kan ik mijn eigen apparaat op dev laten draaien en gebruikersapparaten alleen stabiele builds geven. Ook ondersteunt het systeem accountverwijdering met cascading cleanup van apparaten, tokens en metingen.</p>
 <h3 id="behuizing">Behuizing</h3>
-<p>De behuizing is gemaakt uit zelf behandeld merantihout. Ik heb alles gezagen, gefreesd, geschuurd, gebeitst en gelakt en gelijmt. Binnenin zit een 3D geprintte omhulsing voor alle hardware, waarbij ook is nagedacht over ventilatie en repareerbaarheid. Dit gedeelte van het project heeft veel tijd gekost, maar ik heb zo veel geleerd en ik ben enorm trots op het eindresultaat.</p>
+<p>De behuizing is gemaakt uit zelf behandeld merantihout. Ik heb alles gezagen, gefreesd, geschuurd, gebeitst en gelakt en gelijmd. Binnenin zit een 3D-geprinte omhulsing voor alle hardware, waarbij ook is nagedacht over ventilatie en repareerbaarheid. Dit gedeelte van het project heeft veel tijd gekost, maar ik heb zo veel geleerd en ik ben enorm trots op het eindresultaat.</p>
+<h3 id="telemetrie">Telemetrie</h3>
+<p>Nadat de apparaten bij gebruikers waren geplaatst, voegde ik telemetrie toe om de gezondheid en prestaties van de vloot te volgen. Per run registreert de firmware onder andere de Wi-Fi-signaalsterkte, verbindingstijd, actieve tijd, HTTP-status en foutcodes. De firmware bewaart foutinformatie in RTC-geheugen, zodat ook fouten uit de voorgaande run na de volgende succesvolle verbinding kunnen worden gerapporteerd.</p>
+<p>Met deze gegevens ontdekte ik dat apparaten bij een zeer slechte Wi-Fi-verbinding tot ongeveer 2,2 minuten actief konden blijven door een ongeschikte HTTP-time-out. Voor een apparaat dat het grootste deel van zijn levensduur in deep sleep hoort door te brengen, veroorzaakte dat onnodig hoog energieverbruik.</p>
+<p>Ik paste de time-outconfiguratie aan en verspreidde de wijziging via het bestaande OTA-systeem. Daarmee kon ik een probleem dat pas in echte gebruiksomstandigheden zichtbaar werd centraal detecteren, analyseren en voor de volledige vloot oplossen. Na de update heb ik via het dashboard gecontroleerd dat de actieve tijd bij slechte verbindingen van maximaal 132 seconden naar 27 seconden is gegaan en de fout niet opnieuw optrad.</p>
 <h2 id="resultaat">Resultaat</h2>
 <p>Ik heb zeven StratusDash-units gebouwd en geleverd aan echte gebruikers. Het project groeide van schoolprototype naar een klein product met firmware, backend, frontend, hardware, website, privacybeleid en een onderhoudbaar updateproces.</p>
-<p>Voor mij is StratusDash het bewijs dat ik een embedded product end-to-end kan bouwen. Producten die niet alleen op mijn bureau blijven, maar andere huizen echt mooier maakt. Een klant zei tegen mij dat wat ik heb gemaakt een kunstwerk was, wat precies mijn doel was toen ik dit ging maken.</p>
+<p>Voor mij is StratusDash het bewijs dat ik een embedded product end-to-end kan bouwen. Een klant zei tegen mij dat wat ik heb gemaakt een kunstwerk was. Dat kwam dicht bij mijn oorspronkelijke doel: een technisch product maken dat niet alleen goed functioneert, maar ook zichtbaar iets toevoegt aan een huis.</p>
 <h2 id="wat-ik-leerde">Wat ik leerde</h2>
-<p>StratusDash leerde mij vooral hoe duur elke productkeuze wordt zodra hardware, firmware, backend en gebruiker samenkomen. Wil je meerder layouts? Dat kan, maar dan moet de rendering van de data compleet aangepast worden. Wil je een houten behuizing? Dat gaat jou enorm veel tijd kosten als ontwikkelaar.</p>
+<p>StratusDash leerde mij vooral hoe duur elke productkeuze wordt zodra hardware, firmware, backend en gebruiker samenkomen. Wil je meerdere layouts? Dat kan, maar dan moet de rendering van de data compleet aangepast worden. Wil je een houten behuizing? Dat gaat jou enorm veel tijd kosten als ontwikkelaar.</p>
 <p>Ook leerde ik dat low-power optimalisatie pas echt nuttig wordt wanneer je meet. Zonder mijn Coulomb Counter had ik veel minder precies geweten waar de energie verdween en niet kunnen berekenen wat voor batterij ik nodig had.</p>
 <h2 id="wat-ik-nog-ga-leren">Wat ik nog ga leren</h2>
 <p>Ik ga ook nog dingen leren in dit project. Ze zijn recentelijk allemaal het huis uit, maar nu moet ik nadenken over de volgende stap.</p>

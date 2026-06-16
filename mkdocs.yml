@@ -40,6 +40,7 @@ nav:
       - Overzicht: projects.md
       - Autonome Drone:
           - Overzicht: projects/autonomous-drone/autonomous-vineyard-drone.md
+          - NDVI Camera Module: projects/autonomous-drone/ndvi-camera-system.md
       - Aura:
           - Overzicht: projects/aura-robot/aura-mapping-robot.md
           - GraphSLAM Module: projects/aura-robot/graphslammodule.md
@@ -52,6 +53,7 @@ nav:
           - Pairing Protocol: projects/stratusdash/stratusdash-pairing.md
       - "Defensie: Versterken en Verstoren":
           - Overzicht: projects/defensie-versterken-verstoren/project.md
+          - Security Research: projects/defensie-versterken-verstoren/security-research.md
   - Over Mij: about.md
 
 plugins:

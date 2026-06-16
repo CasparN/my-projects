@@ -1,7 +1,7 @@
 # NDVI Dual-Camera Prototype
 
-!!! note "Technische deep dive"
-    Dit document beschrijft het dual-camera prototype voor de Autonomous Vineyard Drone. Het is gebaseerd op projectdocumentatie over de Raspberry Pi camera modules en de live streaming server.
+!!! note "Technische documentatie"
+    Dit document beschrijft het dual-camera prototype voor de Autonomous Vineyard Drone. Het is originele projectdocumentatie over de Raspberry Pi camera modules en de live streaming server.
 
 ## Doel
 
@@ -17,8 +17,8 @@ Het doel was niet om direct een wetenschappelijk gevalideerde NDVI-oplossing te 
 De camera-opzet bestond uit twee Raspberry Pi camera modules op een Raspberry Pi 5:
 
 - **RGB-camera:** normale zichtbare beelden voor inspectie, documentatie en live video.
-- **NoIR-camera:** camera zonder infraroodfilter, geschikt om nabij-infrarood licht vast te leggen.
-- **Blauwfilter:** gebruikt op de NoIR-camera om een betere scheiding tussen zichtbare en nabij-infrarode componenten te krijgen.
+- **NoIR-camera:** camera zonder infraroodfilter, geschikt om near-infrared licht vast te leggen.
+- **Blauwfilter:** gebruikt op de NoIR-camera om een betere scheiding tussen zichtbare en near-infrared componenten te krijgen.
 - **3D-geprinte behuizing:** ontworpen om beide camera's op de drone te monteren.
 
 De NoIR-camera is gevoeliger voor infrarood licht, waardoor beelden in daglicht vaak roze of magenta lijken. Dat is normaal gedrag voor dit type module en moest meegenomen worden in exposure-instellingen en interpretatie.
@@ -57,11 +57,11 @@ De NoIR-camera werd anders behandeld. Een aparte background thread nam periodiek
 
 Een tweede endpoint (`/ndvi_snapshot`) gaf steeds de nieuwste verwerkte NDVI-afbeelding terug.
 
-Deze scheiding was belangrijk: de RGB-stream bleef vloeiend, terwijl de zwaardere NDVI-bewerking op een lagere frequentie kon draaien.
+Deze scheiding was belangrijk: de RGB-stream bleef soepel, terwijl de zwaardere NDVI-bewerking op een lagere frequentie kon draaien.
 
 ## NDVI-verwerking
 
-NDVI staat voor Normalized Difference Vegetation Index. Het idee is dat gezonde vegetatie zichtbaar rood licht en nabij-infrarood licht anders reflecteert. De basisformule is:
+NDVI staat voor Normalized Difference Vegetation Index. Het idee is dat gezonde planten zichtbaar rood licht en nabij-infrarood licht anders reflecteert. De basisformule is:
 
 ```text
 NDVI = (NIR - Red) / (NIR + Red)
@@ -71,7 +71,7 @@ Bij een goedkope NoIR-camera met blauwfilter is dit een benadering. De kanalen k
 
 ## Integratie met een webapp
 
-De eerste server was monolithisch: camera capture, beeldverwerking en webserver zaten in één Python/Flask-script. Dat werkte goed voor lokale tests, maar is niet ideaal voor een externe webapp.
+De eerste server was een groot bestand: camera capture, beeldverwerking en webserver in één Python/Flask-script. Dat werkte goed voor lokale tests, maar is niet ideaal voor een externe webapp.
 
 Een betere vervolgstap zou zijn om de camera-app als WebSocket-client te laten draaien op de drone. De drone stuurt dan RGB- en NDVI-frames naar een Express-server, die ze doorstuurt naar browserclients. De frontend kan vervolgens twee `<img>`-elementen bijwerken: één voor RGB en één voor NDVI.
 
@@ -94,5 +94,3 @@ Het prototype had een paar duidelijke beperkingen:
 ## Resultaat
 
 Het dual-camera prototype liet zien dat ik normale RGB-beelden en NDVI-achtige beelden uit twee Raspberry Pi camera's kon halen en live kon tonen. Daarmee ontstond een praktische basis voor verdere plantgezondheidsmonitoring, ook al was er nog geen volledige validatie.
-
-Voor het portfolio is dit vooral bewijs van systeemintegratie: camera-hardware, Raspberry Pi, Python, OpenCV, live streaming, image processing en fysieke montage op een drone.

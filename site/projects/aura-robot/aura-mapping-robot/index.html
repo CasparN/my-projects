@@ -13,7 +13,7 @@
       
       
       
-        <link rel="prev" href="../../autonomous-drone/autonomous-vineyard-drone/">
+        <link rel="prev" href="../../autonomous-drone/ndvi-camera-system/">
       
       
         <link rel="next" href="../graphslammodule/">
@@ -482,6 +482,34 @@
     
   
     Overzicht
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../autonomous-drone/ndvi-camera-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NDVI Camera Module
   
 
     
@@ -1153,6 +1181,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../defensie-versterken-verstoren/security-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1374,10 +1430,10 @@
 <p>Ons team wou een autonome patrouillerende robot bouwen die kon navigeren in een magazijnomgeving en daarnaast klimaat- en luchtkwaliteitsdata kon verzamelen. De robot was gebaseerd op een Kobuki Rover met een LiDAR en draaide op een Raspberry Pi.</p>
 <p>Voor de productvisie maakte ik ook het storyboard, schreef ik het script en produceerde ik de promotievideo, niet vereist voor school, maar omdat het leuk was. Maar de kern van mijn technische bijdrage zat in het autonomieprobleem: hoe weet een robot waar hij is in een omgeving die hij nog niet kent?</p>
 <h2 id="het-probleem">Het probleem</h2>
-<p>De standaardroute voor dit soort robotica is vaak ROS met bestaande SLAM-packages. Onze Kobuki Rover had echter drivers die niet goed compatibel waren met de standaard ROS-oplossingen. Daardoor kon ik niet simpelweg een bestaande stack configureren.</p>
-<p>Ik moest zelf een SLAM systeem bouwen die LiDAR-scans en odometrie combineerde, live op een Raspberry Pi draaide en bruikbare kaarten kon genereren voor latere navigatie.</p>
+<p>Het normale pad voor dit soort robotica is vaak ROS met bestaande SLAM-packages. Onze Kobuki Rover had echter drivers die niet goed compatibel waren met de standaard ROS-oplossingen. Daardoor kon ik niet simpelweg een bestaande stack configureren.</p>
+<p>Ik moest zelf een SLAM-systeem bouwen dat LiDAR-scans en odometrie combineerde, live op een Raspberry Pi draaide en bruikbare kaarten kon genereren voor latere navigatie.</p>
 <h2 id="wat-ik-bouwde">Wat ik bouwde</h2>
-<p>Ik implementeerde een GraphSLAM-systeem in C++. De robot verzamelde LiDAR-scans, gebruikte wielodometrie als initiële bewegingsschatting en matchte opeenvolgende scans met GICP (Generalized Iterative Closest Point).</p>
+<p>Ik implementeerde een GraphSLAM-systeem in C++. De robot verzamelde LiDAR-scans, gebruikte wielodometrie als initiële bewegingsschatting en matchte opeenvolgende scans met GICP (Generalized Iterative Closest Point) via PCL.</p>
 <p>Wanneer de robot meer dan 15 cm had gereden, werd een nieuwe keyframe toegevoegd aan een graph. Bij een mogelijke loop closure werd Ceres Solver gebruikt om de graph te optimaliseren en opgebouwde drift terug te trekken naar een consistentere kaart.</p>
 <p>De gegenereerde kaart werd later door een teamgenoot gebruikt als basis voor pathfinding, waardoor de robot autonoom naar een doel in een klaslokaal kon navigeren.</p>
 <h2 id="belangrijke-technische-inzichten">Belangrijke technische inzichten</h2>

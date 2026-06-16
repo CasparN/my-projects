@@ -597,6 +597,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="autonomous-drone/ndvi-camera-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NDVI Camera Module
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1081,6 +1109,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="defensie-versterken-verstoren/security-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1236,18 +1292,18 @@
 <h2 id="coulomb-counter-stage-alflex-technologies-09-2025-tm-02-2026">Coulomb Counter - Stage Alflex Technologies - 09-2025 t/m 02-2026</h2>
 <p>Ontwikkeling van een autonoom en betrouwbaar stroommeetsysteem voor het langdurig analyseren van ultra-low-power IoT-apparaten.</p>
 <ul>
-<li><strong>Rol:</strong> Solo Embedded Software Engineer (Semester 5 Stage).</li>
+<li><strong>Rol:</strong> Embedded Software Engineering-stagiair (embedded en backend)</li>
 <li><strong>Probleem:</strong> Industriële energiemeters (zoals de Joulescope) vereisen een constante pc-verbinding en vertonen software-instabiliteit bij tests langer dan 12 uur. Alflex had behoefte aan een autonoom, embedded alternatief om verborgen stroomvretende-bugs in het veld te vinden.</li>
-<li><strong>Resultaat:</strong> Een stabiele firmware-architectuur op basis van een non-blocking superloop. Data wordt via een zelfontworpen binair MQTT-protocol lossless naar een dockerized backend (InfluxDB + MariaDB) gepusht. In offline mode buffert het apparaat tot minimaal twee maanden aan data op een ruwe flash-partitie met oog op wear-leveling. In online mode wordt PSRAM gebruikt om deze data te bufferen.</li>
+<li><strong>Resultaat:</strong> Een stabiele firmware-architectuur op basis van een non-blocking superloop. Data wordt via een zelfontworpen binair MQTT-protocol naar een backend in Docker-containers (InfluxDB + MariaDB) gepusht. In offlinemodus buffert het apparaat tot minimaal twee maanden aan data op een ruwe flash-partitie met oog op wear-leveling. In onlinemodus wordt PSRAM gebruikt om deze data te bufferen.</li>
 <li><strong>Techstack:</strong> <code>C (ESP-IDF)</code> <code>ATtiny1616</code> <code>ESP32-S3</code> <code>MQTT (Mosquitto)</code> <code>Python</code> <code>InfluxDB</code> <code>MariaDB</code> <code>Grafana</code>.</li>
 <li><a href="coulombcounter/alflex-coulomb-counter/">Uitgebreide versie</a></li>
 </ul>
 <h2 id="defensie-versterken-en-verstoren-dark-tech-studio-03-2026-tm-06-2026">Defensie: Versterken en Verstoren - Dark Tech Studio - 03-2026 t/m 06-2026</h2>
 <p>Een event-driven akoestische sensor voor het detecteren en classificeren van militaire dreigingen (zoals schoten en voertuigen) via YAMNet.</p>
 <ul>
-<li><strong>Rol:</strong> Security &amp; Infrastructure Architect / Firmware optimalisatie.</li>
+<li><strong>Rol:</strong> Creative Technologist - firmware en security-analyse</li>
 <li><strong>Probleem:</strong> Het team had een werkend prototype voor geluidsclassificatie, maar de architectuur was onveilig voor tactisch gebruik (gevoelig voor Man-in-the-Middle aanvallen en elektronische oorlogsvoering) en lokaal geïsoleerd.</li>
-<li><strong>Resultaat:</strong> De firmware-architectuur modulair en event-driven gemaakt (zendt alleen bij overschrijding van een geluidsdrempel). De backend veilig publiek toegankelijk gemaakt via Cloudflare-tunnels op een Raspberry Pi. Daarnaast een uitgebreid Threat Model opgeleverd dat aantoont waarom de transitie naar Edge AI en LoRa cruciaal is voor de overlevingskans van de sensor in het veld.</li>
+<li><strong>Resultaat:</strong> De firmware-architectuur modulair en event-driven gemaakt (zendt alleen bij overschrijding van een geluidsdrempel). De backend veilig publiek toegankelijk gemaakt via Cloudflare-tunnels op een Raspberry Pi. Daarnaast een threat model opgeleverd waaruit bleek waarom edge-AI en een verbindingstechnologie zoals LoRa relevante vervolgrichtingen waren voor de overlevingskans van de sensor in het veld.</li>
 <li><strong>Techstack:</strong> <code>ESP32 (I2S)</code> <code>Cloudflare Tunnels</code> <code>Security Architecture</code> <code>IoT Threat Modeling</code> <code>YAMNet/Python (Team stack)</code>.</li>
 <li><a href="defensie-versterken-verstoren/project/">Uitgebreide versie</a></li>
 </ul>
@@ -1263,7 +1319,7 @@
 <h2 id="aura-autonome-lidar-robot-09-2024-tm-02-2025">AURA - Autonome LiDAR Robot - 09-2024 t/m 02-2025</h2>
 <p>Autonome beveiligingsrobot voor een magazijnomgeving met kaartopbouw, navigatie en klimaat-/luchtkwaliteitsmeting. Het project waar ik vanaf de basis een GraphSLAM-oplossing in C++ bouwde.</p>
 <ul>
-<li><strong>Rol:</strong> Lead C++ / SLAM Engineer.</li>
+<li><strong>Rol:</strong> Verantwoordelijk voor C++ en SLAM</li>
 <li><strong>Probleem:</strong> De Kobuki Rover had geen bruikbare ROS-drivers, dus ik moest een eigen oplossing bouwen om LiDAR-scans en odometrie te combineren voor navigatie in een onbekende omgeving.</li>
 <li><strong>Resultaat:</strong> Een werkend GraphSLAM-systeem met GICP en Ceres Solver dat live LiDAR-data verwerkte, drift corrigeerde via loop closures en een bruikbare kaart opleverde.</li>
 <li><strong>Techstack:</strong> <code>C++</code> <code>CMake</code> <code>SLAM</code> <code>LiDAR</code> <code>Ceres Solver</code> <code>PCL</code> <code>Linux (Ubuntu)</code> <code>Raspberry Pi</code>.</li>
