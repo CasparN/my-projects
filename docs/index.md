@@ -4,6 +4,8 @@ Ik ben Caspar Niekus, vierdejaars HBO-ICT-student met een focus op embedded syst
 
 Tijdens mijn stage bij Alflex ontwikkelde ik een bestaand prototype door tot een autonoom energie-meetsysteem voor low-power IoT-apparaten en deed ik professionele ervaring op met embedded C, MQTT, databases en validatie. Daarnaast heb ik StratusDash ontwikkeld, een IoT product dat bij gebruikers thuis in gebruik is.
 
+![StratusDash productfoto](projects/stratusdash/image.png)
+
 Voor mijn afstudeerstage (februari 2027) zoek ik een technisch uitdagend project binnen embedded software, IoT, sensoren, robotica of autonomie.
 
 Op deze site staan een aantal van mijn favoriete projecten uitgebreid beschreven, inclusief de technische keuzes, doorbraken en lessen die erbij kwamen kijken.
