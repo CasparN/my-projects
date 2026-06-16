@@ -8,7 +8,7 @@
 
 Momenteel werkt het systeem als volgt:
 
-1. De ESP32 start op en verbind met WiFi.
+1. De ESP32 start op en verbindt met WiFi.
 2. De ESP32 detecteert een luid geluid en begint met versturen.
 3. De ESP32 stuurt voor 20 seconden geluid per batch.
 4. Als er nog steeds een luid geluid is, blijft het versturen, anders stopt het versturen.
@@ -17,11 +17,11 @@ Momenteel werkt het systeem als volgt:
 
 Dit systeem vereist een actieve internetverbinding met WiFi. Het doel van dit apparaat is om vijandelijke activiteiten te kunnen detecteren. Als het apparaat een actieve WiFi-verbinding vereist, dan is het vrij zichtbaar voor een voorzichtige en slimme vijand. Dit is ook makkelijk te verstoren, waardoor onze oplossing niet meer informatie kan doorgeven. Dat is een van de grootste beperkingen.
 
-Verder stuurt het embedded apparaat ruwe audiobestanden naar HTTPS endpoints, maar we verifiëren de server identiteit niet. Dit zorgt ervoor dat het apparaat vatbaar is voor Man-in-the-Middle aanvallen (MITM). Iemand op hetzelfde netwerk kan de audio-opnames onderscheppen en/of manipuleren. In deze militaire context is dat natuurlijk een groot probleem.
+Verder stuurt het embedded apparaat ruwe audiobestanden naar HTTPS endpoints, maar we verifiëren de serveridentiteit niet. Dit zorgt ervoor dat het apparaat vatbaar is voor Man-in-the-Middle aanvallen (MITM). Iemand op hetzelfde netwerk kan de audio-opnames onderscheppen en/of manipuleren. In deze militaire context is dat natuurlijk een groot probleem.
 
 ## 2. Beveiliging van de Dataverbinding
 
-MITM aanvallen kunnen goed aangepakt worden. Door te verifiëren of de backend wel onze backend is, met een certificaat, kunnen we zeker zijn dat onze data naar de juiste plek gaat. Dit is goed te doen met de ``WifiClientSecure`` library.
+MITM-aanvallen kunnen goed aangepakt worden. Door te verifiëren of de backend wel onze backend is, met een certificaat, kunnen we zeker zijn dat onze data naar de juiste plek gaat. Dit is goed te doen met de ``WifiClientSecure`` library.
 
 ### VPN Verbinding
 
@@ -31,7 +31,7 @@ Hoewel de opdrachtgever adviseerde om een beveiligde VPN-verbinding te onderzoek
 - **Netwerkcomplexiteit:** Het opzetten, beheren en in stand houden van een VPN-tunnel op een embedded device is complexer dan een enkele HTTPS-verbinding. Als de VPN-verbinding wegvalt in het veld, is de herstelprocedure vaak trager.
 - **Doelmatigheid:** Het apparaat hoeft niet deel uit te maken van een compleet afgeschermd virtueel netwerk; het hoeft alleen veilig te communiceren met één specifieke backend API. HTTPS met strikte certificaatverificatie (`WiFiClientSecure`) biedt hiervoor voldoende end-to-end encryptie en authenticatie, met een fractie van de overhead.
 
-Maar er is nog wel een reden voor een VPN. Ja, ons netwerkverkeer is veilig, de vijand kan niet kijken wat er vervoerdt word. Ze kunnen wel kijken waar het naartoe gaat. Om te zorgen dat het request bij de juiste server uitkomt, wordt het hoofddomein tijdens de zogenaamde TLS-handshake onversleuteld meegestuurd via _Server Name Indication (SNI)_. Een VPN verbinding zou deze informatie verbergen door de versleutelde verbinding met de VPN server.
+Maar er is nog wel een reden voor een VPN. Ja, ons netwerkverkeer is veilig, de vijand kan niet kijken wat er vervoerd wordt. Ze kunnen wel kijken waar het naartoe gaat. Om te zorgen dat het request bij de juiste server uitkomt, wordt het hoofddomein tijdens de zogenaamde TLS-handshake onversleuteld meegestuurd via _Server Name Indication (SNI)_. Een VPN-verbinding zou deze informatie verbergen door de versleutelde verbinding met de VPN server.
 
 Een VPN-oplossing is daarom een optie voor een latere fase, bijvoorbeeld wanneer de architectuur verandert naar een zwaardere single-board computer (zoals een Raspberry Pi) in plaats van een microcontroller.
 

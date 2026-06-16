@@ -1,7 +1,7 @@
 # AURA mapping the Unknown: A deep dive into our implementation
 
 !!! note "Project Documentatie"
-    Deze pagina is documentatie van het koppelingsproces. Het was geschreven in het Engels voor onze opdrachtgever.
+    Dit is de originele documentatie geschreven tijdens het project. Het was geschreven in het Engels voor onze opdrachtgever.
     Dit document, uit 2024, is in originele staat hier te lezen om mijn documentatieproces te tonen.
 
 Imagine you are a robot exploring an unknown maze. How do you build a map while navigating around? How do you use your many sensors to create an accurate interpretation of your environment? In this document, I explain how the `GraphSlamModule` for AURA attempts to solve this. It does this by combining two data sources: a LiDAR to look around, and by keeping track of how much the wheels have rotated, which is called odometry. This concept is called SLAM, which is Simultaneous Localisation and Mapping.

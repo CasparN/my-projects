@@ -2,7 +2,7 @@
 
 Dit project draaide om het doorontwikkelen van een overgenomen droneprototype voor autonome wijngaardmonitoring. Mijn bijdrage zat vooral in systeemintegratie, Mission Planner-configuratie, vliegtesten, hardware-aanpassingen en een low-cost NDVI-cameraprototype.
 
-**Mijn rol:** Drone Pilot, Mission Planner Configurator & NDVI Sensor Engineer
+**Mijn rol:** Drone Pilot & NDVI Sensor Prototyper, ArduPilot Configurator.
 
 ![Drone op gras](drone-on-grass.png)
 

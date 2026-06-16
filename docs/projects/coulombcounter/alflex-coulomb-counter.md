@@ -2,7 +2,7 @@
 
 Tijdens mijn stage bij Alflex Technologies ontwikkelde ik een autonome Coulomb Counter voor langdurige stroommetingen aan ultra-low-power IoT-apparaten. Het systeem moest weken tot maanden kunnen meten zonder constante pc-verbinding, data betrouwbaar bufferen en afwijkingen in stroomverbruik zichtbaar maken.
 
-**Mijn rol:** Solo Embedded Software Engineer
+**Mijn rol:** Embedded Software Stagair
 
 ## Context
 

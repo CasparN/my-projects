@@ -2,7 +2,7 @@
 
 Aura was een proof-of-concept voor een autonome beveiligingsrobot in een magazijnomgeving. Binnen dit project was mijn hoofdrol het bouwen van een eigen GraphSLAM-oplossing in C++, zodat de robot een onbekende omgeving kon mappen met LiDAR en odometrie.
 
-**Mijn rol:** Lead C++ / SLAM Engineer
+**Mijn rol:** Verantwoordelijk voor C++ en SLAM
 
 [![Aura Hero Shot](aura_hero_shot.png)](https://youtu.be/T0WJigca8sU)
 

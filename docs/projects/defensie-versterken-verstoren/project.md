@@ -2,7 +2,7 @@
 
 Dit project was een proof-of-concept voor een akoestische sensor-node die harde geluiden detecteert, audio naar een backend stuurt en daar classificatie via YAMNet mogelijk maakt. Mijn bijdrage lag bij embedded firmware, certificaatverificatie en security-analyse van de netwerkarchitectuur.
 
-**Mijn rol:** Embedded Firmware & Security Engineer
+**Mijn rol:** Creative Technologist - firmware en security-analyse
 
 ## Context
 

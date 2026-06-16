@@ -37,7 +37,7 @@ Een event-driven akoestische sensor voor het detecteren en classificeren van mil
 
 Autonome drone voor wijngaardmonitoring die een route kan vliegen en NDVI-data verzamelt via een low-cost camera-oplossing.
 
-- **Rol:** Drone Pilot & NDVI Sensor Engineer, ArduPilot Configurator.
+- **Rol:** Drone Pilot & NDVI Sensor Engineer, ArduPilot/MissionPlanner Configurator.
 - **Probleem:** Het project startte met beperkte documentatie en een overgenomen prototype, waardoor veel reverse engineering nodig was.
 - **Resultaat:** Een autonoom vliegende drone met NDVI-prototype, live RGB/NDVI-visualisatie en een praktische basis voor irrigatiemonitoring.
 - **Techstack:** `Python` `OpenCV` `Raspberry Pi NoIR` `ArduPilot`.

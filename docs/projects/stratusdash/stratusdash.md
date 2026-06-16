@@ -54,7 +54,7 @@ De backend ondersteunt OTA-updates met aparte dev/acc/stable-kanalen. Daardoor k
 
 ### Behuizing
 
-De behuizing is gemaakt uit zelf behandeld merantihout. Ik heb alles gezagen, gefreesd, geschuurd, gebeitst en gelakt en gelijmd. Binnenin zit een 3D-geprinte omhulsing voor alle hardware, waarbij ook is nagedacht over ventilatie en repareerbaarheid. Dit gedeelte van het project heeft veel tijd gekost, maar ik heb zo veel geleerd en ik ben enorm trots op het eindresultaat.
+De behuizing is gemaakt uit zelf behandeld merantihout. Ik heb alles gezagen, gefreesd, geschuurd, gebeitst, gelakt en gelijmd. Binnenin zit een 3D-geprinte omhulsing voor alle hardware, waarbij ook is nagedacht over ventilatie en repareerbaarheid. Dit gedeelte van het project heeft veel tijd gekost, maar ik heb zo veel geleerd en ik ben enorm trots op het eindresultaat.
 
 ### Telemetrie
 
@@ -80,7 +80,7 @@ Ook leerde ik dat low-power optimalisatie pas echt nuttig wordt wanneer je meet.
 
 Ik ga ook nog dingen leren in dit project. Ze zijn recentelijk allemaal het huis uit, maar nu moet ik nadenken over de volgende stap.
 
-- De TLS certificaten zullen over een paar jaar verlopen. Dan moet op een mooie manier afgehandeld worden.
+- Het Root TLS certificaat zal over een paar jaar verlopen. Dan moet op een mooie manier afgehandeld worden.
 - Elke Firebeetle leest het batterijvoltage net anders uit. Dit is te kalibreren.
 - Het herschrijven van het project naar ESP-IDF zal nuttig zijn om de code beter te structureren en om de werktijd te verminderen.
 

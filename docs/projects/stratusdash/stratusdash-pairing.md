@@ -65,7 +65,7 @@ Als het apparaat wel een device-token bezit zal het altijd optimistisch proberen
 
 De firmware genereert:
 
-- `pairing_attempt_id`: Een UUID v4, dat gebruikt voor de koppellink.
+- `pairing_attempt_id`: Een UUID v4, die gebruikt voor de koppellink.
 - `device_secret`: Een 64-karakter high-entropy string van `esp_random()`.
 
 De device secret wordt niet getoond aan de gebruiker in de QR code of elders.

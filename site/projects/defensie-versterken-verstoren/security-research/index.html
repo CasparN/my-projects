@@ -1398,7 +1398,7 @@ Dit document is in originele staat hier te lezen om mijn documentatieproces en o
 <h2 id="1-huidige-architectuur-en-beperkingen">1. Huidige Architectuur en Beperkingen</h2>
 <p>Momenteel werkt het systeem als volgt:</p>
 <ol>
-<li>De ESP32 start op en verbind met WiFi.</li>
+<li>De ESP32 start op en verbindt met WiFi.</li>
 <li>De ESP32 detecteert een luid geluid en begint met versturen.</li>
 <li>De ESP32 stuurt voor 20 seconden geluid per batch.</li>
 <li>Als er nog steeds een luid geluid is, blijft het versturen, anders stopt het versturen.</li>
@@ -1406,9 +1406,9 @@ Dit document is in originele staat hier te lezen om mijn documentatieproces en o
 <li>De backend plakt alle losse bestandjes aan elkaar en stuurt ze naar de AI analyse.</li>
 </ol>
 <p>Dit systeem vereist een actieve internetverbinding met WiFi. Het doel van dit apparaat is om vijandelijke activiteiten te kunnen detecteren. Als het apparaat een actieve WiFi-verbinding vereist, dan is het vrij zichtbaar voor een voorzichtige en slimme vijand. Dit is ook makkelijk te verstoren, waardoor onze oplossing niet meer informatie kan doorgeven. Dat is een van de grootste beperkingen.</p>
-<p>Verder stuurt het embedded apparaat ruwe audiobestanden naar HTTPS endpoints, maar we verifiëren de server identiteit niet. Dit zorgt ervoor dat het apparaat vatbaar is voor Man-in-the-Middle aanvallen (MITM). Iemand op hetzelfde netwerk kan de audio-opnames onderscheppen en/of manipuleren. In deze militaire context is dat natuurlijk een groot probleem.</p>
+<p>Verder stuurt het embedded apparaat ruwe audiobestanden naar HTTPS endpoints, maar we verifiëren de serveridentiteit niet. Dit zorgt ervoor dat het apparaat vatbaar is voor Man-in-the-Middle aanvallen (MITM). Iemand op hetzelfde netwerk kan de audio-opnames onderscheppen en/of manipuleren. In deze militaire context is dat natuurlijk een groot probleem.</p>
 <h2 id="2-beveiliging-van-de-dataverbinding">2. Beveiliging van de Dataverbinding</h2>
-<p>MITM aanvallen kunnen goed aangepakt worden. Door te verifiëren of de backend wel onze backend is, met een certificaat, kunnen we zeker zijn dat onze data naar de juiste plek gaat. Dit is goed te doen met de <code>WifiClientSecure</code> library.</p>
+<p>MITM-aanvallen kunnen goed aangepakt worden. Door te verifiëren of de backend wel onze backend is, met een certificaat, kunnen we zeker zijn dat onze data naar de juiste plek gaat. Dit is goed te doen met de <code>WifiClientSecure</code> library.</p>
 <h3 id="vpn-verbinding">VPN Verbinding</h3>
 <p>Hoewel de opdrachtgever adviseerde om een beveiligde VPN-verbinding te onderzoeken, is dit voor de huidige hardware (ESP32) op korte termijn niet de meest logische of haalbare keuze. Hier zijn een aantal redenen voor:</p>
 <ul>
@@ -1416,7 +1416,7 @@ Dit document is in originele staat hier te lezen om mijn documentatieproces en o
 <li><strong>Netwerkcomplexiteit:</strong> Het opzetten, beheren en in stand houden van een VPN-tunnel op een embedded device is complexer dan een enkele HTTPS-verbinding. Als de VPN-verbinding wegvalt in het veld, is de herstelprocedure vaak trager.</li>
 <li><strong>Doelmatigheid:</strong> Het apparaat hoeft niet deel uit te maken van een compleet afgeschermd virtueel netwerk; het hoeft alleen veilig te communiceren met één specifieke backend API. HTTPS met strikte certificaatverificatie (<code>WiFiClientSecure</code>) biedt hiervoor voldoende end-to-end encryptie en authenticatie, met een fractie van de overhead.</li>
 </ul>
-<p>Maar er is nog wel een reden voor een VPN. Ja, ons netwerkverkeer is veilig, de vijand kan niet kijken wat er vervoerdt word. Ze kunnen wel kijken waar het naartoe gaat. Om te zorgen dat het request bij de juiste server uitkomt, wordt het hoofddomein tijdens de zogenaamde TLS-handshake onversleuteld meegestuurd via <em>Server Name Indication (SNI)</em>. Een VPN verbinding zou deze informatie verbergen door de versleutelde verbinding met de VPN server.</p>
+<p>Maar er is nog wel een reden voor een VPN. Ja, ons netwerkverkeer is veilig, de vijand kan niet kijken wat er vervoerd wordt. Ze kunnen wel kijken waar het naartoe gaat. Om te zorgen dat het request bij de juiste server uitkomt, wordt het hoofddomein tijdens de zogenaamde TLS-handshake onversleuteld meegestuurd via <em>Server Name Indication (SNI)</em>. Een VPN-verbinding zou deze informatie verbergen door de versleutelde verbinding met de VPN server.</p>
 <p>Een VPN-oplossing is daarom een optie voor een latere fase, bijvoorbeeld wanneer de architectuur verandert naar een zwaardere single-board computer (zoals een Raspberry Pi) in plaats van een microcontroller.</p>
 <h3 id="authenticatie-van-het-apparaat">Authenticatie van het apparaat</h3>
 <p>Momenteel hebben wij geen authenticatie per apparaat. Dit betekent dat iedereen die precies weet wat onze endpoints accepteren, data kan opsturen. Deze data gaat dan ook door de AI analyse heen en kan onze data verpesten. Een vijand kan bijvoorbeeld een heleboel schoten of voetstappen doorgeven, wat kan leiden tot militaire actie, wat kan leiden tot materiaalverlies.</p>
