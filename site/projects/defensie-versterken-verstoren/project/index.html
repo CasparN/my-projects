@@ -1076,6 +1076,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Wat ik implementeerde">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#de-dma-double-buffer-ping-pong-buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        De DMA Double-Buffer (Ping-Pong Buffer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1319,6 +1336,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Wat ik implementeerde">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#de-dma-double-buffer-ping-pong-buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        De DMA Double-Buffer (Ping-Pong Buffer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1455,7 +1489,9 @@
 <h2 id="wat-ik-implementeerde">Wat ik implementeerde</h2>
 <p>Ik werkte aan de ESP32-firmware voor de sensor-node. De node luistert naar audio, detecteert relevante geluidsniveaus en stuurt audiochunks naar de backend voor classificatie.</p>
 <p>Een belangrijk deel van mijn implementatie was het verbeteren van de netwerkbeveiliging. Ik implementeerde HTTPS met certificaatverificatie via <code>WiFiClientSecure</code>, zodat de sensor niet blind data naar een endpoint stuurt zonder de serveridentiteit te controleren.</p>
-<p>Ook onderzocht ik een low-level audio-opzet met een analoge piëzo-contactmicrofoon en DMA double buffering. Deze oplossing werkte technisch, maar de audiokwaliteit was niet goed genoeg voor AI-classificatie. Daarom stapte ik over op een digitale I2S-microfoon. Dat was minder "clever", maar beter voor het systeemdoel.</p>
+<h3 id="de-dma-double-buffer-ping-pong-buffer">De DMA Double-Buffer (Ping-Pong Buffer)</h3>
+<p>Om continu audio te kunnen opnemen zonder de main loop (en de wifi-stack) te blokkeren, ontwierp ik initieel een oplossing met een analoge piëzo-contactmicrofoon. Ik schreef een low-level implementatie waarbij de analoge pin met 16 kHz werd uitgelezen en direct via Direct Memory Access (DMA) in een dubbele buffer werd geplaatst.</p>
+<p>Zodra de eerste helft van de buffer vol was, triggerde de DMA controller een interrupt: de software kon deze helft verwerken en versturen, terwijl de hardware op de achtergrond (via DMA) de tweede helft bleef vullen. Dit werkte technisch gezien perfect, maar in de praktijk bleek dat de audiokwaliteit van de piëzo-microfoon onvoldoende was voor de AI-classificatie. Ik heb deze complexe code daarom geschrapt en ben overgestapt op een standaard digitale I2S-microfoon en de libraries die daarbij komen. De audiokwaliteit van de I2S microfoon werkte heel goed met de AI-analyse.</p>
 <h2 id="wat-ik-analyseerde-en-adviseerde">Wat ik analyseerde en adviseerde</h2>
 <p>Naast implementatie maakte ik een security-analyse van de architectuur. Daarin keek ik naar Man-in-the-Middle-aanvallen, apparaat-authenticatie, spoofing, SNI-lekkage, VPN-overhead, WiFi-zichtbaarheid, LTE-afhankelijkheid en LoRa-bandbreedte.</p>
 <p>Mijn belangrijkste aanbeveling was dat een toekomstige versie minder ruwe audio zou moeten versturen. Door Edge AI lokaal op de sensor te draaien, hoeft de node alleen nog kleine metadata of classificatie-events te verzenden. Dat maakt LoRa of mesh-communicatie realistischer en verlaagt de elektromagnetische zichtbaarheid.</p>

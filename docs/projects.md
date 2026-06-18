@@ -8,7 +8,7 @@ Slim, batterijgevoed weerstation met 7,5-inch e-paper dat binnenklimaat en exter
 
 - **Rol:** Product Engineer (full-stack, hardware en fabricage).
 - **Probleem:** Een gebruiksvriendelijk, low-power dashboard moest maandenlang op batterijen draaien en toch echt inzetbaar blijven voor gebruikers.
-- **Resultaat:** Zeven units als pilot-batch gebouwd en geleverd, met modulaire firmware, veilige pairing, OTA-updates, een solide backend en een Nederlandse en Engelse website.
+- **Resultaat:** Zeven units als pilot-batch gebouwd en geleverd, met modulaire firmware, veilige pairing, OTA-updates, telemetry, een solide backend en een Nederlandse en Engelse website.
 - **Techstack:** `Arduino` `ESP32` `FastAPI` `MariaDB` `E-Paper`.
 - [Uitgebreide versie](projects/stratusdash/stratusdash.md)
 - [Pairing Architectuur](projects/stratusdash/stratusdash-pairing.md)

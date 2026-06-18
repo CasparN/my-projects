@@ -22,7 +22,11 @@ Ik werkte aan de ESP32-firmware voor de sensor-node. De node luistert naar audio
 
 Een belangrijk deel van mijn implementatie was het verbeteren van de netwerkbeveiliging. Ik implementeerde HTTPS met certificaatverificatie via `WiFiClientSecure`, zodat de sensor niet blind data naar een endpoint stuurt zonder de serveridentiteit te controleren.
 
-Ook onderzocht ik een low-level audio-opzet met een analoge piëzo-contactmicrofoon en DMA double buffering. Deze oplossing werkte technisch, maar de audiokwaliteit was niet goed genoeg voor AI-classificatie. Daarom stapte ik over op een digitale I2S-microfoon. Dat was minder "clever", maar beter voor het systeemdoel.
+### De DMA Double-Buffer (Ping-Pong Buffer)
+
+Om continu audio te kunnen opnemen zonder de main loop (en de wifi-stack) te blokkeren, ontwierp ik initieel een oplossing met een analoge piëzo-contactmicrofoon. Ik schreef een low-level implementatie waarbij de analoge pin met 16 kHz werd uitgelezen en direct via Direct Memory Access (DMA) in een dubbele buffer werd geplaatst.
+
+Zodra de eerste helft van de buffer vol was, triggerde de DMA controller een interrupt: de software kon deze helft verwerken en versturen, terwijl de hardware op de achtergrond (via DMA) de tweede helft bleef vullen. Dit werkte technisch gezien perfect, maar in de praktijk bleek dat de audiokwaliteit van de piëzo-microfoon onvoldoende was voor de AI-classificatie. Ik heb deze complexe code daarom geschrapt en ben overgestapt op een standaard digitale I2S-microfoon en de libraries die daarbij komen. De audiokwaliteit van de I2S microfoon werkte heel goed met de AI-analyse.
 
 ## Wat ik analyseerde en adviseerde
 

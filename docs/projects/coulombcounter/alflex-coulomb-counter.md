@@ -26,22 +26,18 @@ Wanneer de MQTT-broker niet bereikbaar was, bufferde het apparaat de metingen lo
 
 ## Wat ik bouwde
 
-Ik bouwde de firmware-architectuur opnieuw op rond een voorspelbare non-blocking superloop. De ATtiny1616 telt pulsen en stuurt geaggregeerde meetdata via UART naar de ESP32-S3. De ESP32 beheert de meting, buffering, opslag, MQTT-communicatie, statusinformatie en synchronisatie met de backend.
+In het begin probeerde ik te snel complexe communicatie en RTOS-taken op te zetten, deels met AI-gegenereerde code. Omdat de opdracht zo groot was, dacht ik dat ik snel grote stappen moest zetten om alles op tijd af te krijgen. Dat leidde, in combinatie met een ambitieuze planning, tot instabiele firmware, onduidelijke stack overflows en code waar ik te weinig controle over en begrip van had.
+
+Na een stevige code review heb ik bewust twee weken afstand genomen van de implementatie. Ik ben dieper in C gedoken, heb de firmware rustig opnieuw ontworpen en ben teruggegaan naar een eenvoudigere architectuur die ik volledig begreep. Ik vermeed eigen dynamische geheugenallocatie en koos voor expliciete state, vaste buffers en een voorspelbare superloop met losse modules, elk met een eigen verantwoordelijkheid en state.
+
+Dat was een belangrijk leerpunt, met C (vooral embedded) dat je het niet alleen moet laten compileren. Je moet kunnen uitleggen waarom het stabiel blijft. Als je een stack overflow tegenkomt, vergroot de stack dan niet blind. Onderzoek eerst waardoor het geheugengebruik groeit en los de oorzaak op. Daarna heb ik deze aanpak vaker toegepast: minder symptoombestrijding en problemen vaker direct bij de oorzaak oplossen. Een voorbeeld was de MQTT-outbox: in plaats van simpelweg meer geheugen toe te wijzen, heb ik onderzocht waarom berichten zich ophoopten en de hoeveelheid berichten in de outbox gelimiteerd.
 
 Voor de backend koos ik een hybride opzet:
 
 - **InfluxDB** voor tijdsreeksdata.
 - **MariaDB** voor metadata, context, firmwareversies, testnamen en apparaatdata.
-- **Grafana** voor analyse en visualisatie.
-- **Mosquitto MQTT** voor telemetrie.
 
-## Waarom ik de hele firmware opnieuw ben begonnen
-
-In het begin probeerde ik te snel complexe communicatie en RTOS-taken op te zetten, deels met AI-gegenereerde code. Omdat de opdracht zo groot was, dacht ik dat ik snel grote stappen moest zetten om alles op tijd af te krijgen. Dat leidde, in combinatie met een ambitieuze planning, tot instabiele firmware, onduidelijke stack overflows en code waar ik te weinig controle over en begrip van had.
-
-Na een stevige code review heb ik bewust twee weken afstand genomen van de implementatie. Ik ben dieper in C gedoken, heb de firmware rustig opnieuw ontworpen en ben teruggegaan naar een eenvoudigere architectuur die ik volledig begreep. Ik vermeed eigen dynamische geheugenallocatie en koos voor expliciete state, vaste buffers en een voorspelbare superloop met losse modules, elk met een eigen verantwoordelijkheid en state.
-
-Dat was een belangrijk leerpunt: voor embedded systemen is "het compileert" niet genoeg. Je moet kunnen uitleggen waarom het stabiel blijft. Als je een stack overflow tegenkomt, vergroot de stack dan niet blind. Onderzoek eerst waardoor het geheugengebruik groeit en los de oorzaak op. Daarna heb ik deze aanpak vaker toegepast: minder symptoombestrijding en problemen vaker direct bij de oorzaak oplossen. Een voorbeeld was de MQTT-outbox: in plaats van simpelweg meer geheugen toe te wijzen, heb ik onderzocht waarom berichten zich ophoopten en de hoeveelheid berichten in de outbox gelimiteerd.
+Grafana kan met beide databases werken en integreert alle data in een dashboard. Voor de MQTT broker heb ik Mosquitto gebruikt, en een python script voor de ingestion.
 
 ## Belangrijke technische keuzes
 
@@ -49,7 +45,7 @@ Dat was een belangrijk leerpunt: voor embedded systemen is "het compileert" niet
 
 De ESP32 moest tot ongeveer 62.000 pulsen per seconde kunnen verwerken naast WiFi, displaytaken en communicatie. Directe CPU-interrupts waren te zwaar. De PCNT-hardwaremodule leek ideaal, maar volgens de analyse en de embedded engineers zouden WiFi-interrupts timingafwijkingen kunnen veroorzaken van 1 tot 10 procent.
 
-De pragmatische keuze was om de ATtiny1616 het telwerk te laten doen. Die aggregeert pulsen en stuurt elke 100 ms een update via UART. Dat verlaagde de tijdsresolutie iets, maar maakte het systeem stabiel en betrouwbaar binnen de projectplanning.
+De pragmatische keuze was om de ATtiny1616 het telwerk te laten doen. Die aggregeert pulsen en stuurt elke 100 ms een update via UART. Dat verlaagde de tijdsresolutie iets, maar maakte het systeem stabiel en betrouwbaar binnen de projectplanning. De ATtiny1616 stuurt altijd de totale pulstelling door in een uint32_t, wat er voor zorgt dat wij berichtjes kunnen missen, maar dan alleen tijdresolutie verliezen.
 
 ### Binair MQTT-protocol
 
@@ -58,6 +54,8 @@ Ik ontwierp een compact binair MQTT-protocol met headers, sequence IDs, run IDs,
 ### Offline opslag op raw flash
 
 Voor offline metingen koos ik geen bestandssysteem, maar een sequentiële buffer op een ruwe flashpartitie. De meetdata heeft een vaste structuur van 4 bytes per event, waardoor bestandssysteemoverhead relatief duur zou zijn. Door data te aggregeren en per flashpagina met CRC op te slaan, kan het apparaat langdurig offline meten met controle over opslagduur, wear-leveling en dataintegriteit.
+
+Meer over hoe dat werkt en hoe ik op die conclusie ben gekomen is mogelijk, [hier is een stuk van mijn onderzoeksverslag](flash-storage.md).
 
 Het uploaden van deze data was ook een leuk probleem: ik had te maken met een MQTT-outbox die snel te vol raakte. Daarom heb ik een systeem geïmplementeerd met drie fasen.
 

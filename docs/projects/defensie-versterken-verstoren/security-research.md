@@ -51,11 +51,11 @@ Een 4G-module lost het probleem van het beperkte bereik op. Iedere sensor kan ov
 
 ### LoRa
 
-LoRa is een technologie ontworpen voor verbindingen over grote afstanden met minimaal stroomverbruik. Het is veel moeilijker te detecteren en te verstoren dan WiFi of 4G, wat het tactisch gezien superieur maakt. Het kritieke nadeel van LoRa is de extreem lage bandbreedte (data throughput). Het is fysiek onmogelijk om 20 seconden aan ruwe audio over een LoRa-netwerk te sturen. LoRa wordt pas een haalbare optie wanneer de architectuur verandert naar _Edge AI_: als we het AI-model lokaal op de ESP32 draaien, hoeft het apparaat alleen nog maar een paar bytes aan tekst te sturen (bijv. "5, 92"). Hier staat 5 dan voor een explosie en 92% voor de zekerheid.
+LoRa is een technologie ontworpen voor verbindingen over grote afstanden met minimaal stroomverbruik. Het is veel moeilijker te detecteren en te verstoren dan WiFi of 4G, wat het tactisch gezien superieur maakt. Het nadeel van LoRa is de extreem lage bandbreedte (data throughput). Het is extreem onpraktisch om 20 seconden aan ruwe audio over een LoRa-netwerk te sturen. LoRa wordt pas een haalbare optie wanneer de architectuur verandert naar _Edge AI_: als we het AI-model lokaal op de ESP32 draaien, hoeft het apparaat alleen nog maar een paar bytes aan tekst te sturen (bijv. "5, 92"). Hier staat 5 dan voor een explosie en 92% voor de zekerheid.
 
 ### Alternatieven
 
-Andere militaire opties zijn tactische Mesh-netwerken. Hierbij fungeert elke ESP32 als een eigen router die signalen van andere sensoren doorstuurt (een 'ketting' van apparaten). Dit vergroot het bereik enorm zonder dat er één centrale hotspot of zendmast nodig is. Valt er één apparaat uit, dan zoekt het netwerk automatisch een andere route. Dit vereist wel een compleet andere netwerkarchitectuur en firmware en is vrij complex.
+Andere militaire opties zijn tactische Mesh-netwerken. Hierbij fungeert elke ESP32 als een eigen router die signalen van andere sensoren doorstuurt. Dit vergroot het bereik enorm zonder dat er één centrale hotspot of zendmast nodig is. Valt er één apparaat uit, dan zoekt het netwerk automatisch een andere route. Dit vereist wel een compleet andere netwerkarchitectuur en firmware en is vrij complex.
 
 ## 4. Conclusie en Aanbevelingen voor Sprint 3+
 

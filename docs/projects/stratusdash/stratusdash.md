@@ -56,11 +56,11 @@ De backend ondersteunt OTA-updates met aparte dev/acc/stable-kanalen. Daardoor k
 
 De behuizing is gemaakt uit zelf behandeld merantihout. Ik heb alles gezagen, gefreesd, geschuurd, gebeitst, gelakt en gelijmd. Binnenin zit een 3D-geprinte omhulsing voor alle hardware, waarbij ook is nagedacht over ventilatie en repareerbaarheid. Dit gedeelte van het project heeft veel tijd gekost, maar ik heb zo veel geleerd en ik ben enorm trots op het eindresultaat.
 
-### Telemetrie
+### Telemetry
 
-Nadat de apparaten bij gebruikers waren geplaatst, voegde ik telemetrie toe om de gezondheid en prestaties van de vloot te volgen. Per run registreert de firmware onder andere de Wi-Fi-signaalsterkte, verbindingstijd, actieve tijd, HTTP-status en foutcodes. De firmware bewaart foutinformatie in RTC-geheugen, zodat ook fouten uit de voorgaande run na de volgende succesvolle verbinding kunnen worden gerapporteerd.
+Nadat de apparaten bij gebruikers waren geplaatst, voegde ik telemetry toe om de gezondheid en prestaties van de vloot te volgen. Per run registreert de firmware onder andere de Wi-Fi-signaalsterkte, verbindingstijd, actieve tijd, HTTP-status en foutcodes. De firmware bewaart foutinformatie in RTC-geheugen, zodat ook fouten uit de voorgaande run na de volgende succesvolle verbinding kunnen worden gemeld.
 
-Met deze gegevens ontdekte ik dat apparaten bij een zeer slechte Wi-Fi-verbinding tot ongeveer 2,2 minuten actief konden blijven door een ongeschikte HTTP-time-out. Voor een apparaat dat het grootste deel van zijn levensduur in deep sleep hoort door te brengen, veroorzaakte dat onnodig hoog energieverbruik.
+Met deze gegevens ontdekte ik dat apparaten bij een zeer slechte Wi-Fi-verbinding tot ongeveer 2,2 minuten actief konden blijven door een HTTP-time-out. Dat is significant, want dat is 7 keer langer wakker dan normaal, wat dus ook 7 keer zoveel energie gebruikt.
 
 Ik paste de time-outconfiguratie aan en verspreidde de wijziging via het bestaande OTA-systeem. Daarmee kon ik een probleem dat pas in echte gebruiksomstandigheden zichtbaar werd centraal detecteren, analyseren en voor de volledige vloot oplossen. Na de update heb ik via het dashboard gecontroleerd dat de actieve tijd bij slechte verbindingen van maximaal 132 seconden naar 27 seconden is gegaan en de fout niet opnieuw optrad.
 
@@ -68,7 +68,7 @@ Ik paste de time-outconfiguratie aan en verspreidde de wijziging via het bestaan
 
 Ik heb zeven StratusDash-units gebouwd en geleverd aan echte gebruikers. Het project groeide van schoolprototype naar een klein product met firmware, backend, frontend, hardware, website, privacybeleid en een onderhoudbaar updateproces.
 
-Voor mij is StratusDash het bewijs dat ik een embedded product end-to-end kan bouwen. Een klant zei tegen mij dat wat ik heb gemaakt een kunstwerk was. Dat kwam dicht bij mijn oorspronkelijke doel: een technisch product maken dat niet alleen goed functioneert, maar ook zichtbaar iets toevoegt aan een huis.
+Voor mij is StratusDash het bewijs dat ik een embedded product end-to-end kan bouwen. Een klant zei tegen mij dat wat ik heb gemaakt een kunstwerk was. Dat was mijn doel wat ook echt zichtbaar iets toevoegt aan een huis. En het heeft ook nog een goede gebruikerservaring ook, want dat vind ik erg belangrijk.
 
 ## Wat ik leerde
 
@@ -81,7 +81,7 @@ Ook leerde ik dat low-power optimalisatie pas echt nuttig wordt wanneer je meet.
 Ik ga ook nog dingen leren in dit project. Ze zijn recentelijk allemaal het huis uit, maar nu moet ik nadenken over de volgende stap.
 
 - Het Root TLS certificaat zal over een paar jaar verlopen. Dan moet op een mooie manier afgehandeld worden.
-- Elke Firebeetle leest het batterijvoltage net anders uit. Dit is te kalibreren.
+- Elke Firebeetle leest het batterijvoltage net anders uit. Dit is te kalibreren, maar hier moet ik even heel erg goed over nadenken.
 - Het herschrijven van het project naar ESP-IDF zal nuttig zijn om de code beter te structureren en om de werktijd te verminderen.
 
 ## Technische proof
