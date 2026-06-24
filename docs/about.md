@@ -18,5 +18,7 @@ Daarnaast heb ik twee jaar ervaring als studentmentor. In die rol ondersteun ik 
 
 ## Contact
 
+Voor contact kan u een bericht sturen via LinkedIn.
+
 - **GitHub:** [Mijn GitHub-Profiel](https://github.com/CasparN)
 - **LinkedIn:** [Mijn LinkedIn-Profiel](https://linkedin.com/in/casparniekus/)
