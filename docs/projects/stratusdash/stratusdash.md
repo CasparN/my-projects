@@ -1,6 +1,10 @@
+---
+title: StratusDash
+---
+
 # StratusDash - 04-2025 t/m heden
 
-StratusDash is een batterijgevoed e-paper weerstation dat binnenklimaat en weersverwachtingen toont op een rustig, altijd zichtbaar display. Ik bouwde het systeem van prototype naar een kleine pilot-batch van zeven apparaten die nu door vrienden en familie worden gebruikt.
+StratusDash is een batterijgevoed e-paper dashboard voor in huis. Het meet temperatuur, luchtvochtigheid en luchtdruk, combineert die met weersinformatie en toont alles op een rustig display dat echt maanden zonder kabel werkt. Wat begon als een schoolprototype, draait inmiddels op acht actieve apparaten waarvoor ik de firmware, backend en webapp beheer.
 
 ![StratusDash productfoto](image.png)
 
@@ -12,35 +16,47 @@ Het doel was niet alleen een werkend prototype. Het was een product dat mensen e
 
 ## Mijn rol
 
-Ik werkte als product engineer aan alle onderdelen:
+Ik ontwerp, bouw en beheer StratusDash zelf. Mijn werk loopt van de firmware en hardware tot de webapp, het releaseproces en de voorbereiding op productie:
 
-- **Firmware:** ESP32-firmware, deep sleep, sensormetingen, e-paper rendering, OTA-updates en device pairing.
-- **Backend:** FastAPI-backend, MariaDB-database, weerdata-cache, device management en updatekanalen.
-- **Frontend:** gebruikersaccounts, device configuratie, locatiekeuze, pairing-flow, accountverwijdering en i18n voor Nederlands/Engels.
-- **Hardware en fabricage:** componentkeuze, prototyping, behuizing, houtbewerking en assemblage van zeven units.
+- Firmware en beheer: ESP32-firmware, energieoptimalisatie, e-paper rendering, OTA-updates en telemetry.
+- Webapp en backend: de FastAPI-backend, Astro-PWA en alles rond accounts, apparaten en layouts.
+- Hardware en fabricage: componentkeuze, prototyping, behuizingen, assemblage en de voorbereiding van een eigen PCB.
+- Productontwikkeling: privacy, licenties, certificering, productieplan en kostprijs.
 
 ## Het probleem
 
-Een weerstation klinkt simpel, maar het raakt veel systemen tegelijk. Het apparaat moet maanden op een accu draaien, snel genoeg opstarten om data op te halen, betrouwbaar koppelen met een account, veilig updates ontvangen en voor gewone gebruikers begrijpelijk blijven. De grootste spanning zat tussen gebruiksgemak en low-power gedrag. Elke extra netwerkactie, TLS-handshake of renderstap kost tijd en dus energie.
+De grootste technische uitdaging was een lange batterijduur halen zonder betrouwbaarheid in te leveren. Wifi, TLS en het bijwerken van het display gebruiken veel meer energie dan deep sleep. Daardoor kunnen enkele seconden vertraging, zeker bij een slechte verbinding, op termijn veel stroom kosten.
 
 ## Wat ik bouwde
 
-Het apparaat gebruikt een FireBeetle 2 ESP32-E, een 7,5-inch Good Display zwart-wit e-paper scherm, een BME280-sensor en een 2500 mAh LiPo. Elke cyclus meet het binnenklimaat, haalt de actuele configuratie en weersverwachting op, rendert de layout naar het e-paper display en gaat terug naar deep sleep.
+De huidige units gebruiken een FireBeetle 2 ESP32-E, een 7,5-inch zwart-wit e-paper display, een BME280-sensor en een 2500 mAh LiPo. Het apparaat meet het binnenklimaat en toont dit samen met de weersverwachting en andere informatie op een configureerbare layout.
 
-Aan de serverkant draait een FastAPI-backend op een VPS. De backend beheert gebruikers, apparaten, layouts, OTA-kanalen en een weather cache, zodat externe API-calls niet onnodig vaak worden gedaan. De database gebruikt MariaDB met Alembic-migraties en constraints voor datakwaliteit.
+De FastAPI-backend beheert accounts, apparaten, layouts, metingen en firmware-releases. Voor Nederlandse locaties gebruikt hij het KNMI HARMONIE-model voor weersverwachtingen en KNMI-stations voor de actuele temperatuur. Buiten het bereik van dat model valt het systeem terug op WeatherAPI.
 
-De webapp is tweetalig via i18n en is bereikbaar via:
+Via de Astro-webapp kunnen gebruikers hun apparaten koppelen en configureren, metingen en historie bekijken en toegang delen met anderen. De webapp is ook installeerbaar als PWA en heeft aparte Nederlandse en Engelse versies:
 
 - [stratusdash.nl](https://stratusdash.nl)
 - [stratusdash.com](https://stratusdash.com)
+
+Voor het maken van layouts bouwde ik [Layout Studio](https://builder.stratusdash.com). De editor werkt rechtstreeks met hetzelfde 800 bij 480-formaat dat de firmware gebruikt en leest de lettertypen, iconen en standaardlayouts uit dezelfde repository. Layouts worden nu nog lokaal in de browser opgeslagen en zijn niet aan een account gekoppeld.
+
+De Home Assistant-integratie haalt elke vijftien minuten de metingen van eigen apparaten op via een accounttoken en maakt daar sensoren voor temperatuur, luchtvochtigheid, luchtdruk en accuspanning van. Gegevens uit Home Assistant op het display tonen is nog niet af.
 
 ## Belangrijke technische keuzes
 
 ### Batterijduur
 
-Het huidige apparaat haalt ongeveer 3 tot 5 maanden op een acculading. Met metingen via mijn Coulomb Counter heb ik de sluipstroom teruggebracht naar ongeveer 54 uA. De grootste winst zit nu niet meer in deep sleep, maar in het verkorten van de tijd dat de CPU wakker is.
+Bij low-power hardware is deep sleep alleen zuinig als alle pinnen zich gedragen. De pinnen van de e-paper-interface bleven tijdens deep sleep floaten, waardoor het apparaat ongemerkt stroom bleef gebruiken. Door ze expliciet aan te sturen en vast te houden, bracht ik het verbruik terug van een fluctuerend bereik van 35 tot 250 µA naar een stabiele deep-sleepmeting van ongeveer 11,7 µA.
 
-De firmware is momenteel Arduino-gebaseerd. Een toekomstige ESP-IDF rewrite zou helpen om HTTP/TLS efficiënter te maken, onder andere door connecties langer open te houden en session resumption te gebruiken. Ook een statisch IP kan de WiFi-connectietijd verkorten. Daarmee kan de actieve tijd mogelijk van 12-18 seconden naar 6-8 seconden.
+De meeste energie wordt nu tijdens een wake gebruikt. De vroegste bewaarde productiefirmware deed daar gemiddeld 16,8 seconden over. Firmware `1.2.69` bracht dat terug naar 1,75 seconden, gemeten over 8.210 gezonde wakes. Op het monitoringdashboard houd ik zelfs een leaderboard bij. Een 1.2.50-run zonder schermupdate duurde slechts 396 ms, het huidige record!
+
+Die winst komt onder andere door het onthouden van wifi-informatie, TLS session resumption en het overslaan van onnodige display-updates. De firmware hervat alleen sessies die uit een volledig geverifieerde TLS-verbinding komen. De sessie is aan de hostname en CA-identiteit gebonden en verloopt na zes uur. Daarna bouwt een volledige handshake een nieuwe sessie op.
+
+Tijdens een ononderbroken test van zeven dagen verbruikte `1.2.69` gemiddeld 171,7 µA, oftewel 4,12 mAh per dag. Dat ondersteunt de omschrijving "ontworpen voor maximaal een jaar tussen laadbeurten", maar het is nog geen volledige ontlaadtest van een productieaccu. Het nadeel van een batterijduur van een jaar is dat het bewijzen ervan ook irritant lang duurt.
+
+### Eigen e-paper driver
+
+Ik verving de bestaande displaybibliotheek door een driver voor het specifieke `GDEY075T7`-paneel. Daarmee verdween een commercieel licentieprobleem en kon ik het net iets sneller maken.
 
 ### Device pairing
 
@@ -48,47 +64,54 @@ Het apparaat koppelt via een QR-code aan een gebruikersaccount. De firmware gene
 
 Deze flow voorkomt dat iemand met alleen de publieke QR-link de device-token kan stelen. Over het koppelproces is [hier](stratusdash-pairing.md) meer over te lezen.
 
-### Productwaardige backend
+### Firmware-releases
 
-De backend ondersteunt OTA-updates met aparte dev/acc/stable-kanalen. Daardoor kan ik mijn eigen apparaat op dev laten draaien en gebruikersapparaten alleen stabiele builds geven. Ook ondersteunt het systeem accountverwijdering met cascading cleanup van apparaten, tokens en metingen.
+Firmware-updates gaan stapsgewijs door `dev`, `acc` en `stable`. Daarbij wordt hetzelfde firmwarebestand tussen de kanalen gepromoveerd zonder het opnieuw te bouwen. Na installatie markeert het apparaat de nieuwe binary pas als geldig wanneer het een volledige wake heeft doorlopen en klaar is om terug te gaan naar deep sleep. Gaat dat ergens mis, dan keert het automatisch terug naar de vorige binary en markeert het de mislukte release als onbruikbaar. Ook als die versie daarna nog wordt aangeboden, downloadt het apparaat het niet opnieuw. Elke release blijft herleidbaar tot de commit en bestandshash. Ondertekende firmware en het bijbehorende sleutelbeheer zijn nog niet af.
 
 ### Behuizing
 
-De behuizing is gemaakt uit zelf behandeld merantihout. Ik heb alles gezagen, gefreesd, geschuurd, gebeitst, gelakt en gelijmd. Binnenin zit een 3D-geprinte omhulsing voor alle hardware, waarbij ook is nagedacht over ventilatie en repareerbaarheid. Dit gedeelte van het project heeft veel tijd gekost, maar ik heb zo veel geleerd en ik ben enorm trots op het eindresultaat.
+De behuizing is gemaakt van merantihout dat ik zelf heb gezaagd, gefreesd, geschuurd, gebeitst, gelakt en gelijmd. Binnenin houdt een 3D-geprint frame de hardware op zijn plaats, met ruimte voor ventilatie en reparaties. Het kostte veel tijd om zeven behuizingen met de hand te maken, maar ik ben nog steeds trots op het resultaat.
 
 ### Telemetry
 
-Nadat de apparaten bij gebruikers waren geplaatst, voegde ik telemetry toe om de gezondheid en prestaties van de vloot te volgen. Per run registreert de firmware onder andere de Wi-Fi-signaalsterkte, verbindingstijd, actieve tijd, HTTP-status en foutcodes. De firmware bewaart foutinformatie in RTC-geheugen, zodat ook fouten uit de voorgaande run na de volgende succesvolle verbinding kunnen worden gemeld.
+Zodra de apparaten bij gebruikers stonden, kon ik er niet meer even een debugger aan hangen. Daarom rapporteert elke wake onder andere de verbindingsduur, signaalsterkte, actieve tijd, resetoorzaak en HTTP-status aan het monitoringdashboard.
 
-Met deze gegevens ontdekte ik dat apparaten bij een zeer slechte Wi-Fi-verbinding tot ongeveer 2,2 minuten actief konden blijven door een HTTP-time-out. Dat is significant, want dat is 7 keer langer wakker dan normaal, wat dus ook 7 keer zoveel energie gebruikt.
+Tijdens een vaste audit voltooide firmware `1.2.69` 5.256 gewone wakes op acht actieve apparaten. Geen wake eindigde in een API- of DNS-fout. Drieënvijftig wakes hadden een tweede HTTP-poging nodig en herstelden allemaal. Toch liet een latere uitschieter zien waarom alleen gemiddelden niet genoeg zijn.
 
-Ik paste de time-outconfiguratie aan en verspreidde de wijziging via het bestaande OTA-systeem. Daarmee kon ik een probleem dat pas in echte gebruiksomstandigheden zichtbaar werd centraal detecteren, analyseren en voor de volledige vloot oplossen. Na de update heb ik via het dashboard gecontroleerd dat de actieve tijd bij slechte verbindingen van maximaal 132 seconden naar 27 seconden is gegaan en de fout niet opnieuw optrad.
+Op 17 augustus duurde één wake 133 seconden. De backend leek de voor de hand liggende verdachte, maar nginx en FastAPI verwerkten het verzoek binnen 213 ms. Uit de fasetelemetrie bleek dat de ESP32 daarvoor al 126,7 seconden was kwijtgeraakt aan een TLS-poging via het laatst bekende IP-adres.
+
+De fout zat in de timeout. Het tijdsbudget voor de gecachte route gold alleen voor de TCP-verbinding. Zodra die verbinding stond, konden de TLS-handshake en een eventuele reconnect alsnog de veel langere standaardtimeout gebruiken. Ik verving dit door één doorlopende deadline voor de volledige verbindingspoging. Als die verloopt, gooit de firmware de gecachte route weg, voert hij opnieuw DNS uit en maakt hij een nieuwe, volledig geverifieerde verbinding.
+
+In `1.2.69` duurde de slechtste gecachte verbindingspoging 126,7 seconden. In `1.2.72` was het maximum 2,3 seconden over de eerste 631 voltooide wakes. Die versie is via dezelfde releasekanalen op alle acht apparaten uitgerold en de twee minuten lange uitschieter is sindsdien niet teruggekomen.
 
 ## Resultaat
 
-Ik heb zeven StratusDash-units gebouwd en geleverd aan echte gebruikers. Het project groeide van schoolprototype naar een klein product met firmware, backend, frontend, hardware, website, privacybeleid en een onderhoudbaar updateproces.
+Ik bouwde en verkocht zeven vroege StratusDash-units voor ongeveer €150 per stuk. Samen met mijn testapparaat zijn er nu acht apparaten actief. StratusDash groeide daarmee van een schoolprototype naar een product dat ik dagelijks ontwikkel, uitrol en beheer.
 
-Voor mij is StratusDash het bewijs dat ik een embedded product end-to-end kan bouwen. Een klant zei tegen mij dat wat ik heb gemaakt een kunstwerk was. Dat was mijn doel wat ook echt zichtbaar iets toevoegt aan een huis. En het heeft ook nog een goede gebruikerservaring ook, want dat vind ik erg belangrijk.
+StratusDash laat voor mij zien dat ik een embedded product van begin tot eind kan bouwen en beheren. De mooiste reactie kwam van een gebruiker die het apparaat een kunstwerk noemde. Dat bleef hangen, want ik wilde techniek maken die goed werkt, prettig in gebruik is en ook gewoon in een woonkamer past.
 
 ## Wat ik leerde
 
-StratusDash leerde mij vooral hoe duur elke productkeuze wordt zodra hardware, firmware, backend en gebruiker samenkomen. Wil je meerdere layouts? Dat kan, maar dan moet de rendering van de data compleet aangepast worden. Wil je een houten behuizing? Dat gaat jou enorm veel tijd kosten als ontwikkelaar.
+StratusDash leerde mij hoe snel een kleine productkeuze doorwerkt in de rest van het systeem. Meerdere layouts vragen om veranderingen in de firmware, backend en webapp. Een houten behuizing ziet er eenvoudig uit, maar kost per apparaat uren handwerk. Ik heb voor veel van die keuzes een goede oplossing gevonden, maar ze bepalen nog steeds hoeveel onderhoud en productiewerk het product vraagt.
 
-Ook leerde ik dat low-power optimalisatie pas echt nuttig wordt wanneer je meet. Zonder mijn Coulomb Counter had ik veel minder precies geweten waar de energie verdween en niet kunnen berekenen wat voor batterij ik nodig had.
+Ik leerde ook dat low-power optimalisatie zonder metingen vooral raden is. Met mijn Coulomb Counter kon ik zien waar de energie werkelijk verdween en veranderingen over een volledige wake vergelijken. Toen de apparaten eenmaal bij gebruikers stonden, werd telemetry net zo belangrijk als een debugger.
 
-## Wat ik nog ga leren
+## Volgende stap
 
-Ik ga ook nog dingen leren in dit project. Ze zijn recentelijk allemaal het huis uit, maar nu moet ik nadenken over de volgende stap.
+De volgende stap is een serie van tien productie-achtige-units met een eigen PCB en een herhaalbaar proces voor de behuizing. Deze moeten door mensen buiten mijn directe omgeving gekocht en gebruikt kunnen worden zonder dat ik erbij hoef te helpen. Maar ik moet dus eerst een PCB maken, spannend.
 
-- Het Root TLS certificaat zal over een paar jaar verlopen. Dan moet op een mooie manier afgehandeld worden.
-- Elke Firebeetle leest het batterijvoltage net anders uit. Dit is te kalibreren, maar hier moet ik even heel erg goed over nadenken.
-- Het herschrijven van het project naar ESP-IDF zal nuttig zijn om de code beter te structureren en om de werktijd te verminderen.
+Daarvoor werk ik nog aan:
 
-## Technische proof
+- een eigen PCB en een reproduceerbare behuizing;
+- ondertekende firmware en het bijbehorende sleutelbeheer;
+- het CE- en RED-traject;
+- kostprijs en vraag rond een verkoopprijs van €299 tot €329.
 
-- [StratusDash Pairing Architectuur](stratusdash-pairing.md) - technische deep dive over het koppelproces.
-- [Coulomb Counter](../coulombcounter/alflex-coulomb-counter.md) - gebruikt om het stroomverbruik te meten en optimaliseren.
+## Technische onderbouwing
+
+- [Pairing-architectuur](stratusdash-pairing.md) - technische uitleg van het koppelproces.
+- [Coulomb Counter](../coulombcounter/alflex-coulomb-counter.md) - het meetinstrument voor stroomverbruik.
 
 ## Gebruikte technologieën
 
-`Arduino` `ESP32` `E-Paper` `BME280` `FastAPI` `MariaDB` `Alembic` `OTA` `i18n` `VPS`
+`PlatformIO` `Arduino` `ESP32` `E-Paper` `BME280` `FastAPI` `SQLAlchemy` `MariaDB` `Astro` `PWA` `Home Assistant` `KNMI HARMONIE` `Linux VPS` `Cloudflare` `nginx`
