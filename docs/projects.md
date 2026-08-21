@@ -1,3 +1,7 @@
+---
+title: Projecten
+---
+
 # Projecten
 
 Hier is een selectie van mijn beste werk.

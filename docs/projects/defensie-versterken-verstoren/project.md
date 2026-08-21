@@ -1,3 +1,7 @@
+---
+title: "Defensie: Versterken en Verstoren"
+---
+
 # Defensie: Versterken en Verstoren - 03-2026 t/m 06-2026
 
 Dit project was een proof-of-concept voor een akoestische sensor-node die harde geluiden detecteert, audio naar een backend stuurt en daar classificatie via YAMNet mogelijk maakt. Mijn bijdrage lag bij embedded firmware, certificaatverificatie en security-analyse van de netwerkarchitectuur.

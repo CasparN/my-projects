@@ -1,3 +1,7 @@
+---
+title: Portfolio
+---
+
 # Caspar Niekus
 
 Ik ben Caspar Niekus, vierdejaars HBO-ICT-student met een focus op embedded systemen en hardware-software-integratie. Ik bouw graag fysieke producten waarin firmware, sensoren, communicatie en backend- en frontendsoftware samenkomen.

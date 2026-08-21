@@ -1,3 +1,7 @@
+---
+title: Autonomous Vineyard Drone
+---
+
 # Autonomous Vineyard Drone - SAW Aero - 03-2025 t/m 06-2025
 
 Dit project draaide om het doorontwikkelen van een overgenomen droneprototype voor autonome wijngaardmonitoring. Mijn bijdrage zat vooral in systeemintegratie, Mission Planner-configuratie, vliegtesten, hardware-aanpassingen en een low-cost NDVI-cameraprototype.

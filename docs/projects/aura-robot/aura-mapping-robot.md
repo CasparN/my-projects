@@ -1,3 +1,7 @@
+---
+title: Aura
+---
+
 # Aura - Autonome LiDAR Robot - 09-2024 t/m 02-2025
 
 Aura was een proof-of-concept voor een autonome beveiligingsrobot in een magazijnomgeving. Binnen dit project was mijn hoofdrol het bouwen van een eigen GraphSLAM-oplossing in C++, zodat de robot een onbekende omgeving kon mappen met LiDAR en odometrie.
