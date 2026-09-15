@@ -1,0 +1,47 @@
+{
+  "stratusdash-at-home": {
+    "width": 1600,
+    "height": 1200,
+    "smallWidth": 640
+  },
+  "finished-unit": {
+    "width": 1600,
+    "height": 1200,
+    "smallWidth": 640
+  },
+  "at-the-mill": {
+    "width": 1600,
+    "height": 1200,
+    "smallWidth": 640
+  },
+  "quiet-water": {
+    "width": 1600,
+    "height": 1200,
+    "smallWidth": 640
+  },
+  "raft": {
+    "width": 1600,
+    "height": 1200,
+    "smallWidth": 640
+  },
+  "mountain-path": {
+    "width": 1600,
+    "height": 1200,
+    "smallWidth": 640
+  },
+  "counter": {
+    "width": 1200,
+    "height": 1600,
+    "smallWidth": 480
+  },
+  "drone": {
+    "width": 1586,
+    "height": 1436,
+    "smallWidth": 640
+  },
+  "aura": {
+    "width": 1600,
+    "height": 900,
+    "smallWidth": 640
+  }
+}

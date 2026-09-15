@@ -1,0 +1,108 @@
+---
+import { getCollection, render } from "astro:content";
+import { getJournalPosts } from "../lib/journal";
+import Shell from "../layouts/Shell.astro";
+import Photo from "../components/Photo.astro";
+import Contents from "../components/Contents.astro";
+import { url } from "../lib/site";
+export async function getStaticPaths() {
+  const pages = await getCollection("pages");
+  return pages
+    .filter((p) => p.id !== "index")
+    .map((entry) => ({
+      params: { page: entry.id },
+      props: { entry },
+    }));
+}
+const { entry } = Astro.props;
+const { page = "" } = Astro.params;
+const { Content, headings } = await render(entry);
+const title =
+  headings.find((h) => h.depth === 1)?.text || entry.data.title || entry.id;
+const newProjects =
+  page === "projects"
+    ? (await getCollection("pages")).filter(
+        (entry) => entry.data.editorProject === true,
+      )
+    : [];
+const relatedJournal = (await getJournalPosts()).find(
+  (post) => post.data.relatedProject?.path.replace(/\/$/, "") === page,
+);
+---
+
+<Shell title={title} page={page}>
+  <div class="article-topline">
+    <a href={url()}>← Startpagina</a><span
+      >{
+        page === "about" ? "Over mij" : "Projecten / technische documentatie"
+      }</span
+    >
+  </div>
+  <div class:list={["article-layout", { "about-layout": page === "about" }]}>
+    <aside class="article-aside">
+      <Contents headings={headings} />{
+        relatedJournal && (
+          <a class="aside-journal" href={url("journal/" + relatedJournal.id)}>
+            <>
+              <Photo
+                name={relatedJournal.data.cover}
+                alt={relatedJournal.data.coverAlt}
+              />
+              <span>
+                Ook in het journal
+                <br />
+                {relatedJournal.data.title} ↗
+              </span>
+            </>
+          </a>
+        )
+      }
+    </aside>
+    <article class="prose">
+      <Content />
+      {
+        newProjects.length > 0 && (
+          <ul>
+            {newProjects.map((project) => (
+              <li>
+                <a href={url(project.id)}>{project.data.title}</a>
+                {project.data.description && <p>{project.data.description}</p>}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      {
+        page === "about" && (
+          <div class="personal-photos">
+            <>
+              <figure>
+                <>
+                  <Photo
+                    name="at-the-mill"
+                    alt="Aan het werk bij een kleine freesmachine"
+                  />
+                </>
+              </figure>
+              <figure>
+                <>
+                  <Photo
+                    name="raft"
+                    alt="Een zelfgebouwd vlot van boomstammen met spullen en een zeil op het water"
+                  />
+                  <figcaption>Buiten mijn studie</figcaption>
+                </>
+              </figure>
+              <figure class="wide">
+                <Photo
+                  name="quiet-water"
+                  alt="Een stil meer in de mist, met een donkere rots in het water"
+                />
+              </figure>
+            </>
+          </div>
+        )
+      }
+    </article>
+  </div>
+</Shell>

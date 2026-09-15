@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.astro/
+test-results/
+public/doc-assets/
+src/lib/doc-media.json
+
+# New entries remain private until explicitly selected for publication.
+src/content/journal/*.md

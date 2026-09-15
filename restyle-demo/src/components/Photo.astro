@@ -1,0 +1,44 @@
+---
+import media from "../lib/media.json";
+import fs from "node:fs";
+import path from "node:path";
+interface Props {
+  name: string;
+  alt: string;
+  eager?: boolean;
+  class?: string;
+  sizes?: string;
+}
+const {
+  name,
+  alt,
+  eager = false,
+  class: className,
+  sizes = "(max-width: 760px) 100vw, 760px",
+} = Astro.props;
+const privateManifest =
+  import.meta.env.DEV && process.env.PORTFOLIO_EDITOR_MEDIA
+    ? path.join(process.env.PORTFOLIO_EDITOR_MEDIA, "..", "media.json")
+    : "";
+const privateMedia =
+  privateManifest && fs.existsSync(privateManifest)
+    ? JSON.parse(fs.readFileSync(privateManifest, "utf8"))
+    : {};
+const size = media[name as keyof typeof media] || privateMedia[name];
+---
+
+{
+  size && (
+    <img
+      class={className}
+      src={`/portfolio/media/${name}-1600.webp`}
+      srcset={`/portfolio/media/${name}-640.webp ${size.smallWidth}w, /portfolio/media/${name}-1600.webp ${size.width}w`}
+      sizes={sizes}
+      width={size.width}
+      height={size.height}
+      alt={alt}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+    />
+  )
+}

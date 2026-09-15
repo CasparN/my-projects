@@ -1,0 +1,26 @@
+---
+interface Props {
+  category: string;
+  date?: Date;
+}
+const { category, date } = Astro.props;
+const label =
+  date &&
+  new Intl.DateTimeFormat("nl-NL", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(date);
+---
+
+<span class="eyebrow">
+  {category}{
+    date && (
+      <>
+        {" "}
+        - <time datetime={date.toISOString().slice(0, 10)}>{label}</time>
+      </>
+    )
+  }
+</span>

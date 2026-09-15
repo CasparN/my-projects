@@ -1,0 +1,192 @@
+---
+import "@fontsource-variable/newsreader";
+import "@fontsource-variable/newsreader/wght-italic.css";
+import "@fontsource-variable/dm-sans";
+import "@fontsource/ibm-plex-mono/400.css";
+import "katex/dist/katex.min.css";
+import "../styles/global.css";
+import { url } from "../lib/site";
+import serifFont from "@fontsource-variable/newsreader/files/newsreader-latin-wght-normal.woff2?url";
+import italicFont from "@fontsource-variable/newsreader/files/newsreader-latin-wght-italic.woff2?url";
+import sansFont from "@fontsource-variable/dm-sans/files/dm-sans-latin-wght-normal.woff2?url";
+interface Props {
+  title: string;
+  page?: string;
+}
+const { title, page = "" } = Astro.props;
+const priorityFonts = [serifFont, italicFont, sansFont];
+---
+
+<!doctype html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      !import.meta.env.PUBLIC_SITE && (
+        <meta name="robots" content="noindex, nofollow" />
+      )
+    }
+    <meta name="color-scheme" content="light dark" />
+    <title>{title} · Caspar Niekus</title>
+    <link rel="icon" type="image/svg+xml" href="/portfolio/favicon.svg" />
+    {
+      priorityFonts.map((font) => (
+        <link
+          rel="preload"
+          href={font}
+          as="font"
+          type="font/woff2"
+          crossorigin="anonymous"
+        />
+      ))
+    }
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem("portfolio-theme");
+        document.documentElement.dataset.theme =
+          saved ||
+          (matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+      } catch {
+        document.documentElement.dataset.theme = matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches
+          ? "dark"
+          : "light";
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Naar inhoud</a>
+    <div class="site-wrap">
+      <header class="site-header">
+        <a class="wordmark" href={url()}>Mijn portfolio</a>
+        <nav aria-label="Hoofdnavigatie">
+          <a
+            href={url("projects")}
+            aria-current={page === "projects" || page.startsWith("projects/")
+              ? "page"
+              : undefined}>Projecten</a
+          >
+          <a
+            href={url("journal")}
+            aria-current={page.startsWith("journal") ? "page" : undefined}
+            >Journal</a
+          >
+          <a
+            href={url("about")}
+            aria-current={page === "about" ? "page" : undefined}>Over mij</a
+          >
+          <a class="contact-link" href={url("about") + "#contact"}
+            >Contact <span aria-hidden="true">↗</span></a
+          >
+          <button
+            class="theme-toggle"
+            type="button"
+            aria-label="Licht / donker: wissel kleurmodus"
+            ><span aria-hidden="true">◐</span>
+            <span data-theme-label>Licht / donker</span></button
+          >
+        </nav>
+      </header>
+      <main id="main" tabindex="-1"><slot /></main>
+      <footer class="site-footer">
+        <a href={url()}>Caspar Niekus</a><span
+          >Embedded software · IoT · Hardware</span
+        ><a href="https://linkedin.com/in/casparniekus/">LinkedIn ↗</a><a
+          href="https://github.com/CasparN">GitHub ↗</a
+        ><a href="#main">Naar boven ↑</a>
+      </footer>
+    </div>
+    <script>
+      const button = document.querySelector<HTMLButtonElement>(".theme-toggle");
+      const label = document.querySelector("[data-theme-label]");
+      function sync() {
+        const dark = document.documentElement.dataset.theme === "dark";
+        if (label) label.textContent = dark ? "Licht" : "Donker";
+        button?.setAttribute(
+          "aria-label",
+          dark
+            ? "Licht: gebruik lichte modus"
+            : "Donker: gebruik donkere modus",
+        );
+        button?.setAttribute("aria-pressed", String(dark));
+      }
+      sync();
+      button?.addEventListener("click", () => {
+        const theme =
+          document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+        document.documentElement.dataset.theme = theme;
+        try {
+          localStorage.setItem("portfolio-theme", theme);
+        } catch {}
+        sync();
+        document.dispatchEvent(new Event("themechange"));
+      });
+      matchMedia("(prefers-color-scheme: dark)").addEventListener(
+        "change",
+        (event) => {
+          let saved;
+          try {
+            saved = localStorage.getItem("portfolio-theme");
+          } catch {}
+          if (!saved) {
+            document.documentElement.dataset.theme = event.matches
+              ? "dark"
+              : "light";
+            sync();
+            document.dispatchEvent(new Event("themechange"));
+          }
+        },
+      );
+      const diagrams = document.querySelectorAll<HTMLElement>(".mermaid");
+      if (diagrams.length) {
+        const { default: mermaid } = await import("mermaid");
+        const sources = Array.from(diagrams, (el) => el.textContent || "");
+        let rendering = false;
+        let requested = false;
+        async function draw() {
+          requested = true;
+          if (rendering) return;
+          rendering = true;
+          diagrams.forEach((el) => el.setAttribute("aria-busy", "true"));
+          try {
+            while (requested) {
+              requested = false;
+              const dark = document.documentElement.dataset.theme === "dark";
+              mermaid.initialize({
+                startOnLoad: false,
+                securityLevel: "strict",
+                theme: "base",
+                themeVariables: {
+                  darkMode: dark,
+                  background: dark ? "#20231f" : "#f4f0e7",
+                  primaryColor: dark ? "#30372d" : "#e7e9dd",
+                  primaryTextColor: dark ? "#eae7dc" : "#252923",
+                  primaryBorderColor: dark ? "#a6b397" : "#626b58",
+                  lineColor: dark ? "#c3ceb6" : "#48513e",
+                  secondaryColor: dark ? "#30372d" : "#e7e9dd",
+                  tertiaryColor: dark ? "#30372d" : "#e7e9dd",
+                  edgeLabelBackground: dark ? "#20231f" : "#f4f0e7",
+                  textColor: dark ? "#eae7dc" : "#252923",
+                },
+              });
+              for (let i = 0; i < diagrams.length; i++) {
+                diagrams[i].removeAttribute("data-processed");
+                diagrams[i].textContent = sources[i];
+              }
+              await mermaid.run({ nodes: diagrams });
+            }
+          } finally {
+            rendering = false;
+            diagrams.forEach((el) => el.removeAttribute("aria-busy"));
+          }
+        }
+        document.addEventListener("themechange", draw);
+        await draw();
+      }
+    </script>
+  </body>
+</html>

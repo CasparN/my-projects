@@ -1,0 +1,37 @@
+---
+import { getJournalPosts } from "../../lib/journal";
+import Shell from "../../layouts/Shell.astro";
+import Photo from "../../components/Photo.astro";
+import JournalMeta from "../../components/JournalMeta.astro";
+import { url } from "../../lib/site";
+const posts = await getJournalPosts();
+---
+
+<Shell title="Journal" page="journal"
+  ><div class="journal-title">
+    <h1>
+      Journal<span aria-hidden="true">.</span>
+    </h1>
+  </div><div class="journal-list">
+    {
+      posts.map((post) => (
+        <a href={url("journal/" + post.id)}>
+          <>
+            <Photo name={post.data.cover} alt={post.data.coverAlt} />
+            <div>
+              <>
+                <JournalMeta
+                  category={post.data.category}
+                  date={post.data.date}
+                />
+                <h2>{post.data.title}</h2>
+                <p>{post.data.description}</p>
+                <span class="text-link">Lees het verhaal ↗</span>
+              </>
+            </div>
+          </>
+        </a>
+      ))
+    }
+  </div></Shell
+>

@@ -1,0 +1,39 @@
+---
+import { render } from "astro:content";
+import { getJournalPosts } from "../../lib/journal";
+import Shell from "../../layouts/Shell.astro";
+import Contents from "../../components/Contents.astro";
+import { url } from "../../lib/site";
+export async function getStaticPaths() {
+  const posts = await getJournalPosts();
+  return posts.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<Shell title={entry.data.title} page={"journal/" + entry.id}>
+  <div class="article-topline">
+    <a href={url("journal")}>← Journal</a><span>{entry.data.category}</span>
+  </div>
+  <header class="journal-post-title">
+    <span class="eyebrow"
+      >{entry.data.draft ? "Concepttekst ter bespreking" : "Journal"}</span
+    ><h1>{entry.data.title}</h1><p>{entry.data.description}</p>
+  </header>
+  <div class="article-layout journal-article">
+    <aside class="article-aside">
+      <Contents headings={headings} label="In dit verhaal" />
+      {
+        entry.data.relatedProject && (
+          <a class="text-link" href={url(entry.data.relatedProject.path)}>
+            {entry.data.relatedProject.label} ↗
+          </a>
+        )
+      }
+    </aside><article class="prose"><Content /></article>
+  </div>
+</Shell>

@@ -1,0 +1,19 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+  label?: string;
+}
+const { headings, label = "Op deze pagina" } = Astro.props;
+const sections = headings.filter((h) => h.depth === 2);
+---
+
+<div class="toc-desktop">
+  <span class="eyebrow">{label}</span><nav aria-label="Inhoudsopgave">
+    {sections.map((h) => <a href={"#" + h.slug}>{h.text}</a>)}
+  </nav>
+</div>
+<details class="toc-mobile">
+  <summary>{label}</summary><nav aria-label="Inhoudsopgave">
+    {sections.map((h) => <a href={"#" + h.slug}>{h.text}</a>)}
+  </nav>
+</details>

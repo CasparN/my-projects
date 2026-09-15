@@ -1,0 +1,38 @@
+{
+  "name": "caspar-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/sync-doc-assets.mjs",
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "node scripts/sync-doc-assets.mjs && astro sync --force && astro build",
+    "preview": "astro preview --host 0.0.0.0",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/markdown-remark": "7.3.0",
+    "@fontsource-variable/dm-sans": "5.3.0",
+    "@fontsource-variable/newsreader": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "astro": "7.3.1",
+    "katex": "0.18.7",
+    "marked": "18.0.12",
+    "mermaid": "11.17.2",
+    "rehype-katex": "7.0.1",
+    "rehype-raw": "7.0.0",
+    "remark-math": "6.0.0",
+    "sirv": "3.0.2",
+    "unist-util-visit": "5.1.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@types/node": "24.13.4",
+    "prettier": "3.9.6",
+    "prettier-plugin-astro": "0.14.1",
+    "sharp": "0.35.4",
+    "typescript": "6.0.3"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
