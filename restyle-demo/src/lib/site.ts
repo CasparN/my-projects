@@ -3,7 +3,7 @@ import homeMarkdown from "../../../docs/index.md?raw";
 
 export const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 // Update alongside changes to the published portfolio, not on each page visit.
-export const lastUpdated = "2026-09-08";
+export const lastUpdated = "2026-09-15";
 const raw = homeMarkdown.replace(/^---[\s\S]*?---\s*/, "");
 const tokens = marked.lexer(raw);
 export const paragraphs = tokens

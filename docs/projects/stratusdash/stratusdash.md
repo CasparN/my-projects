@@ -98,14 +98,13 @@ Ik leerde ook dat low-power optimalisatie zonder metingen vooral raden is. Met m
 
 ## Volgende stap
 
-De volgende stap is een serie van tien productie-achtige-units met een eigen PCB en een herhaalbaar proces voor de behuizing. Deze moeten door mensen buiten mijn directe omgeving gekocht en gebruikt kunnen worden zonder dat ik erbij hoef te helpen. Maar ik moet dus eerst een PCB maken, spannend.
+De volgende stap is een serie van tien productie-achtige-units met een eigen PCB en een herhaalbaar proces voor de behuizing. Deze moeten door mensen buiten mijn directe omgeving gekocht en gebruikt kunnen worden zonder dat ik erbij hoef te helpen.
 
 Daarvoor werk ik nog aan:
 
-- een eigen PCB en een reproduceerbare behuizing;
-- ondertekende firmware en het bijbehorende sleutelbeheer;
-- het CE- en RED-traject;
-- kostprijs en vraag rond een verkoopprijs van €299 tot €329.
+- een eigen PCB en een reproduceerbare behuizing, vooral de behuizing vindt ik lastig.
+- ondertekende firmware en veiligere OTA.
+- Wellicht een Kickstarter, mocht ik nog iets bedenken wat echt nuttig is, naast alleen weer.
 
 ## Technische onderbouwing
 
@@ -114,4 +113,5 @@ Daarvoor werk ik nog aan:
 
 ## Gebruikte technologieën
 
-`PlatformIO` `Arduino` `ESP32` `E-Paper` `BME280` `FastAPI` `SQLAlchemy` `MariaDB` `Astro` `PWA` `Home Assistant` `KNMI HARMONIE` `Linux VPS` `Cloudflare` `nginx`
+`PlatformIO` `Arduino` `ESP32` `E-Paper` `BME280` `FastAPI` `SQLAlchemy` `MariaDB` `Astro` `PWA` `Home Assistant` `KNMI HARMONIE` `Linux VPS` `Cloudflare` `nginx` \`\`hi\`\`
+
