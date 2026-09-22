@@ -245,14 +245,6 @@ em {
 .project-card:hover .project-photo img {
   transform: scale(1.025);
 }
-.project-index {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  font: 10px var(--mono);
-  background: var(--paper);
-  padding: 7px 9px;
-}
 .project-card h2 {
   font-size: 30px;
   letter-spacing: -0.025em;
@@ -261,9 +253,15 @@ em {
   justify-content: space-between;
   gap: 10px;
 }
-.project-card h2 span {
-  font: 20px var(--sans);
-  padding-top: 3px;
+.project-card:hover h2,
+.project-card:focus-visible h2 {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+.project-card-note {
+  border-top: 1px solid var(--line);
+  padding-top: 8px;
 }
 .project-card p {
   font-size: 13px;
@@ -348,13 +346,13 @@ em {
   display: grid;
   grid-template-columns: 1fr 1.1fr;
   gap: 70px;
-  padding: 44px 0 60px;
+  padding: 36px 0 40px;
 }
 .field-copy h1 {
-  font-size: 94px;
+  font-size: 72px;
   line-height: 1.18;
   letter-spacing: -0.025em;
-  margin: 20px 0 24px;
+  margin: 18px 0 20px;
 }
 .field-copy .intro {
   font-family: var(--sans);
@@ -368,6 +366,8 @@ em {
   align-self: start;
 }
 .field-landscape {
+  width: 93%;
+  margin-left: 0;
   margin-top: 10px;
   transform: rotate(2deg);
   align-self: start;
@@ -376,7 +376,7 @@ em {
 }
 .field-landscape img {
   width: 100%;
-  height: 310px;
+  height: 270px;
   object-fit: cover;
 }
 .field-object {
@@ -385,7 +385,7 @@ em {
   display: block;
   position: relative;
   z-index: 1;
-  margin: -100px 2% 0 auto;
+  margin: -125px 2% 0 auto;
   transform: rotate(-5deg);
   background: var(--paper);
   padding: 12px;
@@ -397,9 +397,15 @@ em {
   object-fit: cover;
 }
 .field-object span {
-  font: 10px/1.6 var(--mono);
+  font: 13px/1.45 var(--sans);
   display: block;
   padding: 15px 4px 6px;
+}
+.field-object small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 3px;
 }
 .field-object:hover {
   transform: rotate(-3deg);
@@ -411,13 +417,6 @@ em {
 :root .project-grid {
   grid-template-columns: 1fr 1fr;
   gap: 40px 60px;
-}
-:root .project-card:nth-child(even) {
-  padding-top: 36px;
-}
-:root .project-photo {
-  padding: 10px;
-  background: var(--soft);
 }
 :root .project-photo img {
   height: 280px;
@@ -433,11 +432,6 @@ em {
   border-bottom: 0;
   gap: 60px;
   padding-top: 32px;
-}
-:root .journal-picture {
-  transform: rotate(-2deg);
-  padding: 12px;
-  background: var(--soft);
 }
 :root .journal-picture img {
   height: 340px;
@@ -822,10 +816,10 @@ em {
     gap: 35px;
   }
   .field-copy h1 {
-    font-size: 80px;
+    font-size: 64px;
   }
   .field-landscape img {
-    height: 310px;
+    height: 270px;
   }
   .field-object {
     margin-right: 2%;
@@ -922,19 +916,9 @@ em {
     margin-top: 14px;
     line-height: 1.12;
   }
-  .project-card h2 span {
-    font-size: 15px;
-    padding-top: 3px;
-  }
   .project-card p {
     font-size: 12px;
     line-height: 1.65;
-  }
-  .project-index {
-    font-size: 9px;
-    left: 8px;
-    bottom: 8px;
-    padding: 5px 7px;
   }
   .journal-feature,
   :root .journal-feature {
@@ -980,13 +964,13 @@ em {
     margin-left: auto;
   }
   .field-intro {
-    padding: 28px 0 36px;
+    padding: 24px 0 28px;
     grid-template-columns: 1fr;
-    gap: 33px;
+    gap: 25px;
     min-height: 0;
   }
   .field-copy h1 {
-    font-size: 76px;
+    font-size: 60px;
     margin: 18px 0;
   }
   .field-copy .intro {
@@ -1000,30 +984,23 @@ em {
     padding: 10px 10px 18px;
   }
   .field-landscape img {
-    height: 220px;
+    height: 205px;
   }
   .field-object {
     width: 180px;
-    margin: -80px 0 0 auto;
+    margin: -100px 0 0 auto;
     padding: 8px;
   }
   .field-object img {
     height: 135px;
   }
   .field-object span {
-    font-size: 8px;
+    font-size: 12px;
     padding: 10px 2px 4px;
   }
   :root .project-grid {
     grid-template-columns: 1fr;
     gap: 36px;
-  }
-  :root .project-card {
-    width: 92%;
-  }
-  :root .project-card:nth-child(even) {
-    padding-top: 0;
-    justify-self: end;
   }
   :root .project-photo img {
     height: 280px;
@@ -1187,10 +1164,10 @@ em {
     height: 250px;
   }
   .field-copy h1 {
-    font-size: 80px;
+    font-size: 56px;
   }
   .field-landscape img {
-    height: 210px;
+    height: 205px;
   }
   .journal-post-title h1 {
     font-size: 44px;
@@ -1252,79 +1229,6 @@ em {
   }
   .prose a {
     text-decoration: underline;
-  }
-}
-.research-plate {
-  height: 225px;
-  border: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
-  background: var(--soft);
-}
-.research-plate > span {
-  font: 9px var(--mono);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--muted);
-}
-.research-plate strong {
-  font: 38px/0.98 var(--serif);
-  letter-spacing: -0.04em;
-}
-.research-plate em {
-  font-weight: 400;
-}
-:root .research-plate {
-  height: 330px;
-  padding: 28px;
-}
-:root .research-plate strong {
-  font-size: 52px;
-}
-@media (max-width: 1100px) {
-  .research-plate {
-    height: 190px;
-  }
-  .research-plate strong {
-    font-size: 31px;
-  }
-  :root .research-plate {
-    height: 280px;
-  }
-  :root .research-plate strong {
-    font-size: 43px;
-  }
-}
-@media (max-width: 760px) {
-  .research-plate {
-    height: 180px;
-    padding: 12px;
-  }
-  .research-plate strong {
-    font-size: 26px;
-  }
-  .research-plate > span {
-    font-size: 7px;
-  }
-  :root .research-plate {
-    height: 300px;
-  }
-  :root .research-plate > span {
-    font-size: 9px;
-  }
-}
-@media (max-width: 380px) {
-  .research-plate {
-    height: 250px;
-    padding: 22px;
-  }
-  .research-plate strong {
-    font-size: 40px;
-  }
-  .research-plate > span {
-    font-size: 9px;
   }
 }
 .prose pre.astro-code {
